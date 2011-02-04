@@ -1,0 +1,1265 @@
+#include "MathFunctions.hl"
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* abs
+*
+---------------------------------------------------------------------------------------------------------------------*/
+uchar
+__abs_i8(char x)
+{
+int ti = clUpsampleCHAR((uchar) x);
+    ti = (ti < 0) ? -ti : ti;
+uchar r = clDownsampleToCHAR((uint) ti);
+    return(r);
+}
+
+uchar
+__abs_u8(uchar x)
+{
+uchar r = x;
+    return(r);
+}
+
+ushort
+__abs_i16(short x)
+{
+int ti = clUpsampleSHORT((ushort) x);
+    ti = (ti < 0) ? -ti : ti;
+ushort r = clDownsampleToSHORT((uint) ti);
+    return(r);
+}
+
+ushort
+__abs_u16(ushort x)
+{
+ushort r = x;
+    return(r);
+}
+
+uint
+__abs_i32(int x)
+{
+uint r = (x & _INT_SIGN) ? -x : x;
+    return(r);
+}
+
+uint
+__abs_u32(uint x)
+{
+uint r = x;
+    return(r);
+}
+
+
+ulong
+__abs_i64(long x)
+{
+ulong r = (x & _LONG_SIGN) ? -x : x;
+    return(r);
+}
+
+ulong
+__abs_u64(ulong x)
+{
+ulong r = x;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* abs_diff
+*
+---------------------------------------------------------------------------------------------------------------------*/
+uint
+__abs_diff_i32(int x, int y);
+uint
+__abs_diff_u32(uint x, uint y);
+
+uchar
+__abs_diff_i8(char x, char y)
+{
+uchar r = 0;
+int itx,ity;
+    itx = clUpsampleCHAR((uchar) x);
+    ity = clUpsampleCHAR((uchar) y);
+int itr = abs_diff(itx,ity);
+	r = clDownsampleToCHAR((uint) itr);
+    return(r);
+}
+
+uchar
+__abs_diff_u8(uchar x, uchar y)
+{
+uchar r = 0;
+    r = (uchar)abs_diff((uint)x, (uint)y);
+    return(r);
+}
+
+ushort
+__abs_diff_i16(short x, short y)
+{
+ushort r = 0;
+int itx,ity;
+    itx = clUpsampleSHORT((ushort) x);
+    ity = clUpsampleSHORT((ushort) y);
+int itr = abs_diff(itx,ity);
+	r = clDownsampleToSHORT((uint) itr);
+    return(r);
+}
+
+ushort
+__abs_diff_u16(ushort x, ushort y)
+{
+ushort r = (ushort)abs_diff((uint)x, (uint)y);
+    return(r);
+}
+
+uint
+__abs_diff_i32(int x, int y)
+{
+uint r = 0;
+int mx, mn;
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+uint
+__abs_diff_u32(uint x, uint y)
+{
+uint r = 0;
+uint mx, mn;
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+
+ulong
+__abs_diff_i64(long x, long y)
+{
+ulong r = 0;
+long mx, mn;
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+ulong
+__abs_diff_u64(ulong x, ulong y)
+{
+ulong r = 0;
+ulong mx, mn;
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* add_sat
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+__add_sat_i8(char x, char y)
+{
+char r = 0;
+int iadd;
+    iadd = (int)x + (int)y;
+	iadd = _CL_MAX(iadd, _CHAR_MIN);
+	r = _CL_MIN(iadd, _CHAR_MAX);
+    return(r);
+}
+
+uchar
+__add_sat_u8(uchar x, uchar y)
+{
+uchar r = 0;
+int iadd;
+    iadd = (int)x + (int)y;
+	iadd = _CL_MAX(iadd, (int)_UCHAR_MIN);
+	r = _CL_MIN(iadd, (int)_UCHAR_MAX);
+    return(r);
+}
+
+short
+__add_sat_i16(short x, short y)
+{
+short r = 0;
+int iadd;
+    iadd = (int)x + (int)y;
+	iadd = _CL_MAX(iadd, _SHRT_MIN);
+	r = _CL_MIN(iadd, _SHRT_MAX);
+    return(r);
+}
+
+ushort
+__add_sat_u16(ushort x, ushort y)
+{
+ushort r = 0;
+int iadd;
+    iadd = (int)x + (int)y;
+	iadd = _CL_MAX(iadd, (int)_USHRT_MIN);
+	r = _CL_MIN(iadd, (int)_USHRT_MAX);
+	return(r);
+}
+
+int
+__add_sat_i32(int x, int y)
+{
+int r = 0;
+long ladd;
+    ladd = (long)x + (long)y;
+	ladd = _CL_MAX(ladd, (long)_INT_MIN);
+	r = (int)(_CL_MIN(ladd, (long)_INT_MAX));
+    return(r);
+}
+
+uint
+__add_sat_u32(uint x, uint y)
+{
+uint r = 0;
+long ladd;
+    ladd = (long)x + (long)y;
+	ladd = _CL_MAX(ladd, (long)_UINT_MIN);
+	r = (uint)(_CL_MIN(ladd, (long)_UINT_MAX));
+    return(r);
+}
+
+
+long
+__add_sat_i64(long x, long y)
+{
+long r = 0;
+    r = x + y;
+	if ( y > 0 )
+	{
+		if ( r < x )
+		{
+			r = _LONG_MAX;
+		}
+	}
+	else
+	{
+		if ( r > x )
+		{
+			r = _LONG_MIN;
+		}
+	}
+    return(r);
+}
+
+ulong
+__add_sat_u64(ulong x, ulong y)
+{
+ulong r = 0;
+    r = x + y;
+    if ( r < x )
+	{
+		r = _ULONG_MAX;
+	}
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* hadd
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+__hadd_i8(char x, char y)
+{
+char r = 0;
+    r =(x+y) >> 1;
+    return(r);
+}
+
+uchar
+__hadd_u8(uchar x, uchar y)
+{
+uchar r = 0;
+    r =(x+y) >> 1;
+    return(r);
+}
+
+short
+__hadd_i16(short x, short y)
+{
+short r = 0;
+    r =(x+y) >> 1;
+    return(r);
+}
+
+ushort
+__hadd_u16(ushort x, ushort y)
+{
+ushort r = 0;
+    r =(x+y) >> 1;
+    return(r);
+}
+
+int
+__hadd_i32(int x, int y)
+{
+int r = 0;
+int overflow = ((x & 1) & (y & 1));
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+uint
+__hadd_u32(uint x, uint y)
+{
+uint r = 0;
+uint overflow = ((x & 1) & (y & 1));
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+
+long
+__hadd_i64(long x, long y)
+{
+long r = 0;
+long overflow = ((x & 1) & (y & 1));
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+ulong
+__hadd_u64(ulong x, ulong y)
+{
+ulong r = 0;
+ulong overflow = ((x & 1) & (y & 1));
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* rhadd
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+__rhadd_i8(char x, char y)
+{
+char r = 0;
+    r =(x + y + 1) >> 1;
+    return(r);
+}
+
+uchar
+__rhadd_u8(uchar x, uchar y)
+{
+uchar r = 0;
+    r =(x + y + 1) >> 1;
+    return(r);
+}
+
+short
+__rhadd_i16(short x, short y)
+{
+short r = 0;
+    r =(x + y + 1) >> 1;
+    return(r);
+}
+
+ushort
+__rhadd_u16(ushort x, ushort y)
+{
+ushort r = 0;
+    r =(x + y + 1) >> 1;
+    return(r);
+}
+
+int
+__rhadd_i32(int x, int y)
+{
+int r = 0;
+int overflow = ((x | y) & 1);
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+uint
+__rhadd_u32(uint x, uint y)
+{
+uint r = 0;
+uint overflow = ((x | y) & 1);
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+
+long
+__rhadd_i64(long x, long y)
+{
+long r = 0;
+long overflow = ((x | y) & 1);
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+ulong
+__rhadd_u64(ulong x, ulong y)
+{
+ulong r = 0;
+ulong overflow = ((x | y) & 1);
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* clz
+*
+---------------------------------------------------------------------------------------------------------------------*/
+#if 0
+int
+clCntZeros16( uint x )
+{
+int r = _USHRT_MAXBITS;
+   x &= _USHRT_BITMASK;
+   if ( x  )
+   {
+// use float normalization hw for bit counting
+float t = as_float( ONEEXPBITS_SP32 | x );
+      t -= 1.f;
+uint it_exp = (as_int(t) &  EXPBITS_SP32);
+uint tr = (((ONEEXPBITS_SP32 - it_exp) & EXPBITS_SP32) >> EXPSHIFTBITS_SP32);
+// 1 is from normalized float
+// 23 - 16 =7 + 1 = 8
+      r = tr - 8;
+   }
+   return (r);
+}
+
+int
+clCntZeros23( uint x, int max_bits )
+{
+int r = max_bits;
+
+   {
+// use float normalization hw for bit counting
+float t = as_float( ONEEXPBITS_SP32 | x );
+      t -= 1.f;
+uint it_exp = (as_int(t) &  EXPBITS_SP32);
+uint tr = (((ONEEXPBITS_SP32 - it_exp) & EXPBITS_SP32) >> EXPSHIFTBITS_SP32);
+// 1 is from normalized float
+// 23 - 23 =7 + 1 = 1
+      r = tr - (23 - max_bits + 1);
+   }
+   r = ( x == 0 ) ? max_bits : r;
+   return (r);
+}
+
+#endif
+
+int
+clCntZeros32( uint x )
+{
+int r, r0, r1;
+uint x_half = (x >> 16);
+   r0 = clCntZeros16(x_half);
+   r1 = clCntZeros16(x);
+   r = r0;
+   r = ( r0 == 16 ) ? r0 + r1: r;
+   return (r);
+}
+
+int
+clCntZeros64( ulong x )
+{
+int r, r0, r1, r2;
+uint x_hi, x_lo;
+uint bits23_0,bits23_1,bits18_2;
+   x_lo = (uint)(x & 0xffffffffULL);
+   x_hi = (uint)(( x >> 32) & 0xffffffffULL);
+   bits23_0 = (x_hi >> 9);
+   bits23_1 = (x_hi << 14) | (x_lo >> 18) ;
+   bits23_1 &= MANTBITS_SP32;
+   bits18_2 = x_lo & 0x3ffff;
+   r0 = clCntZeros23(bits23_0,23);
+   r1 = clCntZeros23(bits23_1,23);
+   r2 = clCntZeros23(bits18_2,18);
+   r = r0;
+   r = ( r0 == 23 ) ? r0 + r1: r;
+   r = ( r0 + r1 == 46 ) ? r0 + r1 + r2: r;
+   return (r);
+}
+
+
+char
+__clz_i8(char x)
+{
+char r = 0;
+    r = clCntZeros16(((uint)x & 0xFF));
+    r -= 8;
+    return(r);
+}
+
+uchar
+__clz_u8(uchar x)
+{
+uchar r = 0;
+    r = clCntZeros16(((uint)x & 0xFF));
+    r -= 8;
+    return(r);
+}
+
+short
+__clz_i16(short x)
+{
+short r = 0;
+    r = (short)clCntZeros16(((uint)x & 0xFFFF));
+    return(r);
+}
+
+ushort
+__clz_u16(ushort x)
+{
+ushort r = 0;
+    r = (ushort)clCntZeros16(((uint)x & 0xFFFF));
+    return(r);
+}
+
+int
+__clz_i32(int x)
+{
+int r = 0;
+    r = (int)clCntZeros32((uint)x);
+    return(r);
+}
+
+uint
+__clz_u32(uint x)
+{
+uint r = 0;
+    r = (uint)clCntZeros32(x);
+    return(r);
+}
+
+
+long
+__clz_i64(long x)
+{
+long r = 0;
+    r = (long)clCntZeros64((ulong)x);
+    return(r);
+}
+
+ulong
+__clz_u64(ulong x)
+{
+ulong r = 0;
+    r = (ulong)clCntZeros64(x);
+    return(r);
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mad_hi
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+__mad_hi_i8(char a, char b, char c)
+{
+char r = 0;
+int mult = (int)a * (int)b;
+	r = (char)((mult >> 8 ) + c);
+    return(r);
+}
+
+uchar
+__mad_hi_u8(uchar a, uchar b, uchar c)
+{
+uchar r = 0;
+uint mult = (uint)a *(uint) b;
+	r = (uchar)((mult >> 8 ) + c);
+    return(r);
+}
+
+short
+__mad_hi_i16(short a, short b, short c)
+{
+short r = 0;
+int mult = (int)a * (int)b;
+	r = (short)((mult >> 16 ) + c);
+    return(r);
+}
+
+ushort
+__mad_hi_u16(ushort a, ushort b, ushort c)
+{
+ushort r = 0;
+uint mult = (uint)a *(uint) b;
+	r = (ushort)((mult >> 16 ) + c);
+    return(r);
+}
+
+int
+__mad_hi_i32(int a, int b, int c)
+{
+int r = 0;
+long mult = (long)a * (long)b ;
+	r = (int)((mult >> 32 ) + c);
+    return(r);
+}
+
+uint
+__mad_hi_u32(uint a, uint b, uint c)
+{
+uint r = 0;
+ulong mult = (ulong)a * (ulong)b ;
+	r = (uint)((mult >> 32 ) + c);
+    return(r);
+}
+
+
+long
+__mad_hi_i64(long a, long b, long c)
+{
+long r = 0;
+long hi;
+ulong lo;
+//    Float::lgamma_f32(0);
+    multiply_signed_64_by_64( a, b, &lo, &hi );
+	r = hi + c;
+    return(r);
+}
+
+ulong
+__mad_hi_u64(ulong a, ulong b, ulong c)
+{
+ulong r = 0;
+ulong hi;
+ulong lo;
+    multiply_unsigned_64_by_64( a, b, &lo, &hi );
+	r = hi + c;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mad_sat
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+__mad_sat_i8(char a, char b, char c)
+{
+char r = 0;
+int imult;
+    imult = ((int)a * (int)b);
+    imult += (int)c;
+	imult = _CL_MAX(imult, _CHAR_MIN);
+	r = _CL_MIN(imult, _CHAR_MAX);
+    return(r);
+}
+
+uchar
+__mad_sat_u8(uchar a, uchar b, uchar c)
+{
+uchar r = 0;
+uint uimult;
+    uimult = ((uint)a * (uint)b);
+    uimult += (uint)c;
+	uimult = _CL_MAX(uimult, _UCHAR_MIN);
+	r = _CL_MIN(uimult, _UCHAR_MAX);
+    return(r);
+}
+
+short
+__mad_sat_i16(short a, short b, short c)
+{
+short r = 0;
+int imult;
+    imult = ((int)a * (int)b);
+    imult += (int)c;
+	imult = _CL_MAX(imult, _SHRT_MIN);
+	r = _CL_MIN(imult, _SHRT_MAX);
+    return(r);
+}
+
+ushort
+__mad_sat_u16(ushort a, ushort b, ushort c)
+{
+ushort r = 0;
+uint uimult;
+    uimult = ((uint)a * (uint)b);
+    uimult = __add_sat_u32(uimult,(uint)c); 
+	uimult = _CL_MAX(uimult, _USHRT_MIN);
+	r = _CL_MIN(uimult, _USHRT_MAX);
+    return(r);
+}
+
+int
+__mad_sat_i32(int a, int b, int c)
+{
+int r = 0;
+long lmult;
+    lmult = ((long)a * (long)b);
+    lmult += (long)c;
+	lmult = _CL_MAX(lmult, (long)_INT_MIN);
+	r = (int)(_CL_MIN(lmult, (long)_INT_MAX));
+    return(r);
+}
+
+uint
+__mad_sat_u32(uint a, uint b, uint c)
+{
+uint r = 0;
+ulong ulmult;
+    ulmult = ((ulong)a * (ulong)b);
+    ulmult = __add_sat_u64(ulmult,(ulong)c);
+	ulmult = _CL_MAX(ulmult, (ulong)_UINT_MIN);
+	r = (uint)(_CL_MIN(ulmult, (ulong)_UINT_MAX));
+    return(r);
+}
+
+
+long
+__mad_sat_i64(long a, long b, long c)
+{
+long r = 0;
+long hi;
+ulong lo;
+    multiply_signed_64_by_64( a, b, &lo, &hi );
+ulong sum = lo + c;
+        // carry if overflow
+        if( c >= 0 )
+        {
+            if( lo > sum )
+            {
+                hi++;
+                if( _LONG_MIN == hi )
+                {
+                    hi = _LONG_MAX;
+                    sum = _ULONG_MAX;
+                }
+            }
+        }
+        else
+        {
+            if( lo < sum )
+            {
+                hi--;
+                if( _LONG_MAX == hi )
+                {
+                    hi = _LONG_MIN;
+                    sum = 0;
+                }
+            }
+        }
+
+        // saturate
+        if( hi > 0 )
+            sum = _LONG_MAX;
+        else if( hi < -1 )
+            sum = (ulong)_LONG_MIN;
+     r = (long) sum;
+
+    return(r);
+}
+
+ulong
+__mad_sat_u64(ulong a, ulong b, ulong c)
+{
+ulong r = 0;
+ulong hi;
+ulong lo;
+    multiply_unsigned_64_by_64( a, b, &lo, &hi );
+
+    lo += c;
+    hi += lo < c;  // carry if overflow
+    if( hi )
+	{
+       lo = 0xFFFFFFFFFFFFFFFFULL;
+	}
+    r = lo;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* max
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+__max_i8(char x, char y)
+{
+char r = _CL_MAX(x,y);
+    return(r);
+}
+
+uchar
+__max_u8(uchar x, uchar y)
+{
+uchar r = _CL_MAX(x,y);
+    return(r);
+}
+
+short
+__max_i16(short x, short y)
+{
+short r = _CL_MAX(x,y);
+    return(r);
+}
+
+ushort
+__max_u16(ushort x, ushort y)
+{
+ushort r = _CL_MAX(x,y);
+    return(r);
+}
+
+int
+__max_i32(int x, int y)
+{
+int r = _CL_MAX(x,y);
+    return(r);
+}
+
+uint
+__max_u32(uint x, uint y)
+{
+uint r = _CL_MAX(x,y);
+    return(r);
+}
+
+
+long
+__max_i64(long x, long y)
+{
+long r = _CL_MAX(x,y);
+    return(r);
+}
+
+ulong
+__max_u64(ulong x, ulong y)
+{
+ulong r = _CL_MAX(x,y);
+    return(r);
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* min
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+__min_i8(char x, char y)
+{
+char r = _CL_MIN(x,y);
+    return(r);
+}
+
+uchar
+__min_u8(uchar x, uchar y)
+{
+uchar r = _CL_MIN(x,y);
+    return(r);
+}
+
+short
+__min_i16(short x, short y)
+{
+short r = _CL_MIN(x,y);
+    return(r);
+}
+
+ushort
+__min_u16(ushort x, ushort y)
+{
+ushort r = _CL_MIN(x,y);
+    return(r);
+}
+
+int
+__min_i32(int x, int y)
+{
+int r = _CL_MIN(x,y);
+    return(r);
+}
+
+uint
+__min_u32(uint x, uint y)
+{
+uint r = _CL_MIN(x,y);
+    return(r);
+}
+
+
+long
+__min_i64(long x, long y)
+{
+long r = _CL_MIN(x,y);
+    return(r);
+}
+
+ulong
+__min_u64(ulong x, ulong y)
+{
+ulong r = _CL_MIN(x,y);
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mul_hi
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+__mul_hi_i8(char x, char y)
+{
+char r = 0;
+int mult = (int)x * (int)y;
+	r = (char)(mult >> 8 );
+    return(r);
+}
+
+uchar
+__mul_hi_u8(uchar x, uchar y)
+{
+uchar r = 0;
+uint mult = (uint)x * (uint)y;
+	r = (uchar)(mult >> 8 );
+    return(r);
+}
+
+short
+__mul_hi_i16(short x, short y)
+{
+short r = 0;
+int mult = (int)x * (int)y;
+	r = (short)(mult >> 16 );
+    return(r);
+}
+
+ushort
+__mul_hi_u16(ushort x, ushort y)
+{
+ushort r = 0;
+uint mult = (uint)x * (uint)y;
+	r = (ushort)(mult >> 16 );
+    return(r);
+}
+
+int
+__mul_hi_i32(int x, int y)
+{
+int r = 0;
+long mult = (long)x * (long)y;
+	r = (int)(mult >> 32 );
+    return(r);
+}
+
+uint
+__mul_hi_u32(uint x, uint y)
+{
+uint r = 0;
+ulong mult = (ulong)x * (ulong)y;
+	r = (uint)(mult >> 32 );
+    return(r);
+}
+
+
+long
+__mul_hi_i64(long x, long y)
+{
+long r = 0;
+long hi;
+ulong lo;
+    multiply_signed_64_by_64( x, y, &lo, &hi );
+	r = hi;
+    return(r);
+}
+
+ulong
+__mul_hi_u64(ulong x, ulong y)
+{
+ulong r = 0;
+ulong hi;
+ulong lo;
+    multiply_unsigned_64_by_64( x, y, &lo, &hi );
+	r = hi;
+    return(r);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* rotate
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+__rotate_i8(char v, char i)
+{
+char r = 0;
+	i &= 7;
+    r = (char)(((uchar)v << i) | ((uchar)v >> (_UCHAR_MAXBITS - i )));
+    return(r);
+}
+
+uchar
+__rotate_u8(uchar v, uchar i)
+{
+uchar r = 0;
+	i &= 7;
+    r = ((v << i) | (v >> (_UCHAR_MAXBITS - i )));
+    return(r);
+}
+
+short
+__rotate_i16(short v, short i)
+{
+short r = 0;
+	i &= 15;
+    r = (short)(((ushort)v << i) | ((ushort)v >> (_USHRT_MAXBITS - i )));
+    return(r);
+}
+
+ushort
+__rotate_u16(ushort v, ushort i)
+{
+ushort r = 0;
+	i &= 15;
+    r = ((v << i) | (v >> (_USHRT_MAXBITS - i )));
+    return(r);
+}
+
+int
+__rotate_i32(int v, int i)
+{
+int r = 0;
+	i &= 31;
+    r = (int)(((uint)v << i) | ((uint)v >> (_UINT_MAXBITS - i )));
+    return(r);
+}
+
+uint
+__rotate_u32(uint v, uint i)
+{
+uint r = 0;
+	i &= 31;
+    r = ((v << i) | (v >> (_UINT_MAXBITS - i )));
+    return(r);
+}
+
+
+long
+__rotate_i64(long v, long i)
+{
+long r =0;
+	i &= 63;
+    r = (long)(((ulong)v << i) | ((ulong)v >> (_ULONG_MAXBITS - i )));
+    return(r);
+}
+
+ulong
+__rotate_u64(ulong v, ulong i)
+{
+ulong r = 0;
+	i &= 63;
+    r = ((v << i) | (v >> (_ULONG_MAXBITS - i )));
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* sub_sat
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+__sub_sat_i8(char x, char y)
+{
+char r = 0;
+int isub;
+    isub = (int)x - (int)y;
+	isub = _CL_MAX(isub, _CHAR_MIN);
+	r = _CL_MIN(isub, _CHAR_MAX);
+	return(r);
+}
+
+uchar
+__sub_sat_u8(uchar x, uchar y)
+{
+uchar r = 0;
+int isub;
+    isub = (int)x - (int)y;
+	isub = _CL_MAX(isub, (int)_UCHAR_MIN);
+	r = _CL_MIN(isub, (int)_UCHAR_MAX);
+    return(r);
+}
+
+short
+__sub_sat_i16(short x, short y)
+{
+short r = 0;
+int isub;
+    isub = (int)x - (int)y;
+	isub = _CL_MAX(isub, _SHRT_MIN);
+	r = _CL_MIN(isub, _SHRT_MAX);
+    return(r);
+}
+
+ushort
+__sub_sat_u16(ushort x, ushort y)
+{
+ushort r = 0;
+int isub;
+    isub = (int)x - (int)y;
+	isub = _CL_MAX(isub, (int)_USHRT_MIN);
+	r = _CL_MIN(isub, (int)_USHRT_MAX);
+    return(r);
+}
+
+int
+__sub_sat_i32(int x, int y)
+{
+int r = 0;
+long lsub;
+    lsub = (long)x - (long)y;
+	lsub = _CL_MAX(lsub, (long)_INT_MIN);
+	r = (int)(_CL_MIN(lsub, (long)_INT_MAX));
+    return(r);
+}
+
+uint
+__sub_sat_u32(uint x, uint y)
+{
+uint r = 0;
+long lsub;
+    lsub = (long)x - (long)y;
+	lsub = _CL_MAX(lsub, (long)_UINT_MIN);
+	r = (uint)(_CL_MIN(lsub, (long)_UINT_MAX));
+    return(r);
+}
+
+
+long
+__sub_sat_i64(long x, long y)
+{
+long r = 0;
+    r = __add_sat_i64(x, -y);
+    return(r);
+}
+
+ulong
+__sub_sat_u64(ulong x, ulong y)
+{
+ulong r = 0;
+    r = x - y;
+	r = ( x < y ) ? 0 : r;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* upsample
+*
+---------------------------------------------------------------------------------------------------------------------*/
+short
+__upsample_i8u8(char hi, uchar lo)
+{
+short r = 0;
+    r = ((short)hi << 8) | lo;
+    return(r);
+}
+
+ushort
+__upsample_u8u8(uchar hi, uchar lo)
+{
+ushort r = 0;
+    r = ((ushort)hi << 8) | lo;
+    return(r);
+}
+
+int
+__upsample_i16u16(short hi, ushort lo)
+{
+int r = 0;
+    r = ((int)hi << 16) | lo;
+    return(r);
+}
+
+uint
+__upsample_u16u16(ushort hi, ushort lo)
+{
+uint r = 0;
+    r = ((uint)hi << 16) | lo;
+    return(r);
+}
+
+long
+__upsample_i32u32(int hi, uint lo)
+{
+long r = 0;
+    r = ((long)hi << 32) | lo;
+    return(r);
+}
+
+ulong
+__upsample_u32u32(uint hi, uint lo)
+{
+ulong r = 0;
+    r = ((ulong)hi << 32) | lo;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mad24
+*
+---------------------------------------------------------------------------------------------------------------------*/
+int __mul24_i32(int x, int y);
+uint __mul24_u32(uint x, uint y);
+
+int
+__mad24_i32(int a, int b, int c)
+{
+int r = 0;
+    r = __mul24_i32(a,b) + c;
+    return(r);
+}
+
+uint
+__mad24_u32(uint a, uint b, uint c)
+{
+uint r = 0;
+    r = __mul24_u32(a,b) + c;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mul24
+*
+---------------------------------------------------------------------------------------------------------------------*/
+int
+__mul24_i32(int x, int y)
+{
+int r = 0;
+    x = ((x << 8) >> 8);
+    y = ((y << 8) >> 8);
+    r = x * y;
+    return(r);
+}
+
+uint
+__mul24_u32(uint x, uint y)
+{
+uint r = 0;
+    x &= 0xffffff;
+    y &= 0xffffff;
+    r = x * y;
+    return(r);
+}

@@ -1,0 +1,4420 @@
+/* ============================================================
+
+Copyright (c) 2010 Advanced Micro Devices, Inc.  All rights reserved.
+
+Redistribution and use of this material is permitted under the following 
+conditions:
+
+Redistributions must retain the above copyright notice and all terms of this 
+license.
+
+In no event shall anyone redistributing or accessing or using this material 
+commence or participate in any arbitration or legal action relating to this 
+material against Advanced Micro Devices, Inc. or any copyright holders or 
+contributors. The foregoing shall survive any expiration or termination of 
+this license or any agreement or access or use related to this material. 
+
+ANY BREACH OF ANY TERM OF THIS LICENSE SHALL RESULT IN THE IMMEDIATE REVOCATION 
+OF ALL RIGHTS TO REDISTRIBUTE, ACCESS OR USE THIS MATERIAL.
+
+THIS MATERIAL IS PROVIDED BY ADVANCED MICRO DEVICES, INC. AND ANY COPYRIGHT 
+HOLDERS AND CONTRIBUTORS "AS IS" IN ITS CURRENT CONDITION AND WITHOUT ANY 
+REPRESENTATIONS, GUARANTEE, OR WARRANTY OF ANY KIND OR IN ANY WAY RELATED TO 
+SUPPORT, INDEMNITY, ERROR FREE OR UNINTERRUPTED OPERA TION, OR THAT IT IS FREE 
+FROM DEFECTS OR VIRUSES.  ALL OBLIGATIONS ARE HEREBY DISCLAIMED - WHETHER 
+EXPRESS, IMPLIED, OR STATUTORY - INCLUDING, BUT NOT LIMITED TO, ANY IMPLIED 
+WARRANTIES OF TITLE, MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, 
+ACCURACY, COMPLETENESS, OPERABILITY, QUALITY OF SERVICE, OR NON-INFRINGEMENT. 
+IN NO EVENT SHALL ADVANCED MICRO DEVICES, INC. OR ANY COPYRIGHT HOLDERS OR 
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, PUNITIVE,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, REVENUE, DATA, OR PROFITS; OR 
+BUSINESS INTERRUPTION) HOWEVER CAUSED OR BASED ON ANY THEORY OF LIABILITY 
+ARISING IN ANY WAY RELATED TO THIS MATERIAL, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE. THE ENTIRE AND AGGREGATE LIABILITY OF ADVANCED MICRO DEVICES, 
+INC. AND ANY COPYRIGHT HOLDERS AND CONTRIBUTORS SHALL NOT EXCEED TEN DOLLARS 
+(US $10.00). ANYONE REDISTRIBUTING OR ACCESSING OR USING THIS MATERIAL ACCEPTS 
+THIS ALLOCATION OF RISK AND AGREES TO RELEASE ADVANCED MICRO DEVICES, INC. AND 
+ANY COPYRIGHT HOLDERS AND CONTRIBUTORS FROM ANY AND ALL LIABILITIES, 
+OBLIGATIONS, CLAIMS, OR DEMANDS IN EXCESS OF TEN DOLLARS (US $10.00). THE 
+FOREGOING ARE ESSENTIAL TERMS OF THIS LICENSE AND, IF ANY OF THESE TERMS ARE 
+CONSTRUED AS UNENFORCEABLE, FAIL IN ESSENTIAL PURPOSE, OR BECOME VOID OR 
+DETRIMENTAL TO ADVANCED MICRO DEVICES, INC. OR ANY COPYRIGHT HOLDERS OR 
+CONTRIBUTORS FOR ANY REASON, THEN ALL RIGHTS TO REDISTRIBUTE, ACCESS OR USE 
+THIS MATERIAL SHALL TERMINATE IMMEDIATELY. MOREOVER, THE FOREGOING SHALL 
+SURVIVE ANY EXPIRATION OR TERMINATION OF THIS LICENSE OR ANY AGREEMENT OR 
+ACCESS OR USE RELATED TO THIS MATERIAL.
+
+NOTICE IS HEREBY PROVIDED, AND BY REDISTRIBUTING OR ACCESSING OR USING THIS 
+MATERIAL SUCH NOTICE IS ACKNOWLEDGED, THAT THIS MATERIAL MAY BE SUBJECT TO 
+RESTRICTIONS UNDER THE LAWS AND REGULATIONS OF THE UNITED STATES OR OTHER 
+COUNTRIES, WHICH INCLUDE BUT ARE NOT LIMITED TO, U.S. EXPORT CONTROL LAWS SUCH 
+AS THE EXPORT ADMINISTRATION REGULATIONS AND NATIONAL SECURITY CONTROLS AS 
+DEFINED THEREUNDER, AS WELL AS STATE DEPARTMENT CONTROLS UNDER THE U.S. 
+MUNITIONS LIST. THIS MATERIAL MAY NOT BE USED, RELEASED, TRANSFERRED, IMPORTED,
+EXPORTED AND/OR RE-EXPORTED IN ANY MANNER PROHIBITED UNDER ANY APPLICABLE LAWS, 
+INCLUDING U.S. EXPORT CONTROL LAWS REGARDING SPECIFICALLY DESIGNATED PERSONS, 
+COUNTRIES AND NATIONALS OF COUNTRIES SUBJECT TO NATIONAL SECURITY CONTROLS. 
+MOREOVER, THE FOREGOING SHALL SURVIVE ANY EXPIRATION OR TERMINATION OF ANY 
+LICENSE OR AGREEMENT OR ACCESS OR USE RELATED TO THIS MATERIAL.
+
+NOTICE REGARDING THE U.S. GOVERNMENT AND DOD AGENCIES: This material is 
+provided with "RESTRICTED RIGHTS" and/or "LIMITED RIGHTS" as applicable to 
+computer software and technical data, respectively. Use, duplication, 
+distribution or disclosure by the U.S. Government and/or DOD agencies is 
+subject to the full extent of restrictions in all applicable regulations, 
+including those found at FAR52.227 and DFARS252.227 et seq. and any successor 
+regulations thereof. Use of this material by the U.S. Government and/or DOD 
+agencies is acknowledgment of the proprietary rights of any copyright holders 
+and contributors, including those of Advanced Micro Devices, Inc., as well as 
+the provisions of FAR52.227-14 through 23 regarding privately developed and/or 
+commercial computer software.
+
+This license forms the entire agreement regarding the subject matter hereof and 
+supersedes all proposals and prior discussions and writings between the parties 
+with respect thereto. This license does not affect any ownership, rights, title,
+or interest in, or relating to, this material. No terms of this license can be 
+modified or waived, and no breach of this license can be excused, unless done 
+so in a writing signed by all affected parties. Each term of this license is 
+separately enforceable. If any term of this license is determined to be or 
+becomes unenforceable or illegal, such term shall be reformed to the minimum 
+extent necessary in order for this license to remain in effect in accordance 
+with its terms as modified by such reformation. This license shall be governed 
+by and construed in accordance with the laws of the State of Texas without 
+regard to rules on conflicts of law of any state or jurisdiction or the United 
+Nations Convention on the International Sale of Goods. All disputes arising out 
+of this license shall be subject to the jurisdiction of the federal and state 
+courts in Austin, Texas, and all defenses are hereby waived concerning personal 
+jurisdiction and venue of these courts.
+
+============================================================ */
+
+
+
+#include "MathFunctions.hcl"
+
+
+float static max(float x, float y);
+double static max(double x, double y);
+float static min(float x, float y);
+double static min(double x, double y);
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* RELATIONAL
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+//Returns the component-wise compare of x == y.
+
+static int isequal (float x, float y)
+{
+   return(!isnan(x) && !isnan(y) && x==y);
+}
+
+//Returns the component-wise compare of x != y.
+static int isnotequal (float x, float y)
+{
+   return(isnan(x) || isnan(y) || x!=y);
+}
+
+//Returns the component-wise compare of x > y.
+static int isgreater (float x, float y)
+{
+   return(!isnan(x) && !isnan(y) && x>y);
+}
+
+//Returns the component-wise compare of x >= y.
+static int isgreaterequal (float x, float y)
+{
+   return(!isnan(x) && !isnan(y) && x>=y);
+}
+
+//Returns the component-wise compare of x < y.
+static int isless (float x, float y)
+{
+   return(!isnan(x) && !isnan(y) && x<y);
+}
+
+//Returns the component-wise compare of x <= y.
+static int islessequal (float x, float y)
+{
+   return(!isnan(x) && !isnan(y) && x<=y);
+}
+
+//Returns the component-wise compare of (x < y) || (x > y)
+static int islessgreater (float x, float y)
+{
+   return(!isnan(x) && !isnan(y) && (x<y || x>y));
+}
+
+//inline int isinf(float x) 
+//inline int isfinite(float x)
+//inline int isnan(float _a)
+//inline int isnormal(float x)
+
+//Test if arguments are ordered. isordered() takes
+//arguments x and y, and returns the result
+//isequal(x, x) && isequal(y, y).
+
+static int isordered (float x, float y)
+{
+   return(isequal(x, x) && isequal(y, y));
+}
+
+//Test if arguments are unordered. isunordered() takes
+//arguments x and y, returning non-zero if x or y is NaN,
+//and zero otherwise.
+static int isunordered (float x, float y)
+{
+   return(isnan(x) || isnan(y));  
+}
+
+//Test for sign bit. The scalar version of the function
+//returns a 1 if the sign bit in the float is set else returns 0.
+//The vector version of the function returns the following
+//for each component in floatn: a -1 if the sign bit in the
+//float is set else returns 0.
+static int signbit (float x)
+{
+   return( (as_int(x) & 0x80000000) == 0x80000000);
+}
+
+
+
+//Returns the component-wise compare of x == y.
+
+static int isequal (double x, double y)
+{
+   return(!isnan(x) && !isnan(y) && x==y);
+}
+
+//Returns the component-wise compare of x != y.
+static int isnotequal (double x, double y)
+{
+   return(isnan(x) || isnan(y) || x!=y);
+}
+
+//Returns the component-wise compare of x > y.
+static int isgreater (double x, double y)
+{
+   return(!isnan(x) && !isnan(y) && x>y);
+}
+
+//Returns the component-wise compare of x >= y.
+static int isgreaterequal (double x, double y)
+{
+   return(!isnan(x) && !isnan(y) && x>=y);
+}
+
+//Returns the component-wise compare of x < y.
+static int isless (double x, double y)
+{
+   return(!isnan(x) && !isnan(y) && x<y);
+}
+
+//Returns the component-wise compare of x <= y.
+static int islessequal (double x, double y)
+{
+   return(!isnan(x) && !isnan(y) && x<=y);
+}
+
+//Returns the component-wise compare of (x < y) || (x > y)
+static int islessgreater (double x, double y)
+{
+   return(!isnan(x) && !isnan(y) && (x<y || x>y));
+}
+
+//inline int isinf(double x) 
+//inline int isfinite(double x)
+//inline int isnan(double _a)
+//inline int isnormal(double x)
+
+//Test if arguments are ordered. isordered() takes
+//arguments x and y, and returns the result
+//isequal(x, x) && isequal(y, y).
+
+static int isordered (double x, double y)
+{
+   return(isequal(x, x) && isequal(y, y));
+}
+
+//Test if arguments are unordered. isunordered() takes
+//arguments x and y, returning non-zero if x or y is NaN,
+//and zero otherwise.
+static int isunordered (double x, double y)
+{
+   return(isnan(x) || isnan(y));  
+}
+
+//Test for sign bit. The scalar version of the function
+//returns a 1 if the sign bit in the double is set else returns 0.
+//The vector version of the function returns the following
+//for each component in doublen: a -1 if the sign bit in the
+//double is set else returns 0.
+static int signbit (double x)
+{
+fd_twoints t;
+   t.d = x;
+   return( (__HI(t) & 0x80000000) == 0x80000000);
+}
+
+
+
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* all
+*
+---------------------------------------------------------------------------------------------------------------------*/
+int
+static all( char x )
+{
+int r = 0;
+    r = (x & _UCHAR_MSB_BIT) == _UCHAR_MSB_BIT ? 1 : 0;
+	return(r);
+}
+
+int
+static all( uchar x )
+{
+int r = 0;
+    r = (x & _UCHAR_MSB_BIT) == _UCHAR_MSB_BIT ? 1 : 0;
+	return(r);
+}
+
+
+int 
+static all( short x )
+{
+int r = 0;
+    r = (x & _USHRT_MSB_BIT) == _USHRT_MSB_BIT ? 1 : 0;
+	return(r);
+}
+
+int 
+static all( ushort x )
+{
+int r = 0;
+    r = (x & _USHRT_MSB_BIT) == _USHRT_MSB_BIT? 1 : 0;
+	return(r);
+}
+
+int 
+static all( int x )
+{
+int r = 0;
+    r = (x & _UINT_MSB_BIT) == _UINT_MSB_BIT? 1 : 0;
+	return(r);
+}
+
+int 
+static all( uint x )
+{
+int r = 0;
+    r = (x & _UINT_MSB_BIT)== _UINT_MSB_BIT? 1 : 0;
+	return(r);
+}
+
+int 
+static all( __LONG x )
+{
+int r = 0;
+    r = ((uint)(((x >> 32) & 0xffffffff) & _UINT_MSB_BIT)) == _UINT_MSB_BIT && ((uint)((x & 0xffffffff)) & _UINT_MSB_BIT) == _UINT_MSB_BIT? 1 : 0;
+	return(r);
+}
+
+int 
+static all( __ULONG x )
+{
+int r = 0;
+    r = ((uint)((x >> 32) & _UINT_MSB_BIT)) == _UINT_MSB_BIT && ((uint)((x & 0xffffffff)) & _UINT_MSB_BIT) == _UINT_MSB_BIT? 1 : 0;
+	return(r);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* any
+*
+---------------------------------------------------------------------------------------------------------------------*/
+int
+static any( char x )
+{
+int r = 0;
+    r = (x & _UCHAR_MSB_BIT) ? 1 : 0;
+	return(r);
+}
+
+int
+static any( uchar x )
+{
+int r = 0;
+    r = (x & _UCHAR_MSB_BIT) ? 1 : 0;
+	return(r);
+}
+
+
+int 
+static any( short x )
+{
+int r = 0;
+    r = (x & _USHRT_MSB_BIT)? 1 : 0;
+	return(r);
+}
+
+int 
+static any( ushort x )
+{
+int r = 0;
+    r = (x & _USHRT_MSB_BIT)? 1 : 0;
+	return(r);
+}
+
+int 
+static any( int x )
+{
+int r = 0;
+    r = (x & _UINT_MSB_BIT)? 1 : 0;
+	return(r);
+}
+
+int 
+static any( uint x )
+{
+int r = 0;
+    r = (x & _UINT_MSB_BIT)? 1 : 0;
+	return(r);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* bitselect
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+// c == 0 -> a -> r
+// c != 0 -> b -> r
+
+
+uchar 
+static bitselect( uchar a, uchar b, uchar c)
+{
+uchar r;
+   r = (a & (~c)) | (b & c);
+   return (r);
+}
+
+char 
+static bitselect( char a, char b, char c)
+{
+char r;
+   r = (a & (~c)) | (b & c);
+   return (r);
+}
+
+
+ushort 
+static bitselect( ushort a, ushort b, ushort c)
+{
+ushort r;
+   r = (a & (~c)) | (b & c);
+   return (r);
+}
+
+short 
+static bitselect( short a, short b, short c)
+{
+short r;
+   r = (a & (~c)) | (b & c);
+   return (r);
+}
+
+int 
+static bitselect( int a, int b, int c)
+{
+int r;
+   r = (a & (~c)) | (b & c);
+   return (r);
+}
+
+uint 
+static bitselect( uint a, uint b, uint c)
+{
+uint r;
+   r = (a & (~c)) | (b & c);
+   return (r);
+}
+ 
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* select
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+
+char
+static select( char a, char b, char c)
+{
+char r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+
+char 
+static select( char a, char b, uchar c)
+{
+char r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+uchar
+static select( uchar a, uchar b, char c)
+{
+uchar r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+
+uchar
+static uselect( uchar a, uchar b, uchar c)
+{
+uchar r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+short
+static select( short a, short b, short c)
+{
+short r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+
+short
+static select( short a, short b, ushort c)
+{
+short r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+ushort
+static select( ushort a, ushort b, short c)
+{
+ushort r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+
+ushort
+static select( ushort a, ushort b, ushort c)
+{
+ushort r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+int
+static select( int a, int b, int c)
+{
+int r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+
+int
+static select( int a, int b, uint c)
+{
+int r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+uint
+static select( uint a, uint b, int c)
+{
+uint r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+
+uint
+static select( uint a, uint b, uint c)
+{
+uint r;
+   r = (c) ? b : a;
+   return (r);
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* INTEGERS
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* abs
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+uchar 
+static abs(char x)
+{
+uchar r = abs((int)x);
+    return(r);
+}
+
+uchar
+static abs(uchar x)
+{
+uchar r = x;
+    return(r);
+}
+
+ushort
+static abs(short x)
+{
+ushort r = abs((int)x);
+    return(r);
+}
+
+ushort
+static abs(ushort x)
+{
+ushort r = x;
+    return(r);
+}
+
+/*
+static uint
+abs(int x)
+{
+uint r = (x < 0) ? -x : x;
+    return(r);
+}
+
+uint
+static abs(uint x)
+{
+uint r = x;
+    return(r);
+}
+
+
+__LONG
+static abs(__LONG x)
+{
+__ULONG r = (x < 0) ? -x : x;
+    return(r);
+}
+
+__ULONG
+static abs(__LONG x)
+{
+__LONG r = x;
+    return(r);
+}
+*/
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* abs_diff
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+uchar
+static abs_diff(char x, char y)
+{
+uchar r = 0;
+char mx, mn;
+
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+uchar
+static abs_diff(uchar x, uchar y)
+{
+uchar r = 0;
+uchar mx, mn;
+
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+ushort
+static abs_diff(short x, short y)
+{
+ushort r = 0;
+short mx, mn;
+
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+ushort
+static abs_diff(ushort x, ushort y)
+{
+ushort r;
+ushort mx, mn;
+
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+
+    return(r);
+}
+
+uint
+static abs_diff(int x, int y)
+{
+uint r = 0;
+int mx, mn;
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+uint
+static abs_diff(uint x, uint y)
+{
+uint r = 0;
+uint mx, mn;
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+
+__LONG
+static abs_diff(__LONG x, __LONG y)
+{
+__ULONG r = 0;
+__LONG mx, mn;
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+static __ULONG
+abs_diff(__ULONG x, __ULONG y)
+{
+__ULONG r = 0;
+__ULONG mx, mn;
+    mx = _CL_MAX(x,y);
+    mn = _CL_MIN(x,y);
+	r = mx-mn;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* add_sat
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+static add_sat(char x, char y)
+{
+char r = 0;
+int iadd;
+    iadd = (int)x + (int)y;
+	iadd = _CL_MAX(iadd, _CHAR_MIN);
+	r = _CL_MIN(iadd, _CHAR_MAX);
+    return(r);
+}
+
+uchar
+static add_sat(uchar x, uchar y)
+{
+uchar r = 0;
+int iadd;
+    iadd = (int)x + (int)y;
+	iadd = _CL_MAX(iadd, (int)_UCHAR_MIN);
+	r = _CL_MIN(iadd, (int)_UCHAR_MAX);
+    return(r);
+}
+
+short
+static add_sat(short x, short y)
+{
+short r = 0;
+int iadd;
+    iadd = (int)x + (int)y;
+	iadd = _CL_MAX(iadd, _SHRT_MIN);
+	r = _CL_MIN(iadd, _SHRT_MAX);
+    return(r);
+}
+
+ushort
+static add_sat(ushort x, ushort y)
+{
+ushort r = 0;
+int iadd;
+    iadd = (int)x + (int)y;
+	iadd = _CL_MAX(iadd, (int)_USHRT_MIN);
+	r = _CL_MIN(iadd, (int)_USHRT_MAX);
+	return(r);
+}
+
+int
+static add_sat(int x, int y)
+{
+int r = 0;
+__LONG ladd;
+    ladd = (__LONG)x + (__LONG)y;
+	ladd = _CL_MAX(ladd, (__LONG)_INT_MIN);
+	r = (int)(_CL_MIN(ladd, (__LONG)_INT_MAX));
+    return(r);
+}
+
+uint
+static add_sat(uint x, uint y)
+{
+uint r = 0;
+__LONG ladd;
+    ladd = (__LONG)x + (__LONG)y;
+	ladd = _CL_MAX(ladd, (__LONG)_UINT_MIN);
+	r = (uint)(_CL_MIN(ladd, (__LONG)_UINT_MAX));
+    return(r);
+}
+
+
+__LONG
+static add_sat(__LONG x, __LONG y)
+{
+__LONG r = 0;
+    r = x + y;
+	if ( y > 0 )
+	{
+		if ( r < x )
+		{
+			r = _LONG_MAX;
+		}
+	}
+	else
+	{
+		if ( r > x )
+		{
+			r = _LONG_MIN;
+		}
+	}
+    return(r);
+}
+
+__ULONG
+static add_sat(__ULONG x, __ULONG y)
+{
+__ULONG r = 0;
+    r = x + y;
+    if ( r < x )
+	{
+		r = _ULONG_MAX;
+	}
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* hadd
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+static hadd(char x, char y)
+{
+char r = 0;
+    r =(x+y) >> 1;
+    return(r);
+}
+
+uchar
+static hadd(uchar x, uchar y)
+{
+uchar r = 0;
+    r =(x+y) >> 1;
+    return(r);
+}
+
+short
+static hadd(short x, short y)
+{
+short r = 0;
+    r =(x+y) >> 1;
+    return(r);
+}
+
+ushort
+static hadd(ushort x, ushort y)
+{
+ushort r = 0;
+    r =(x+y) >> 1;
+    return(r);
+}
+
+int
+static hadd(int x, int y)
+{
+int r = 0;
+int overflow = ((x & 1) & (y & 1));
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+uint
+static hadd(uint x, uint y)
+{
+uint r = 0;
+uint overflow = ((x & 1) & (y & 1));
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+
+static __LONG
+hadd(__LONG x, __LONG y)
+{
+__LONG r = 0;
+__LONG overflow = ((x & 1) & (y & 1));
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+__ULONG
+static hadd(__ULONG x, __ULONG y)
+{
+__ULONG r = 0;
+__ULONG overflow = ((x & 1) & (y & 1));
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* rhadd
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+static rhadd(char x, char y)
+{
+char r = 0;
+    r =(x + y + 1) >> 1;
+    return(r);
+}
+
+uchar
+static rhadd(uchar x, uchar y)
+{
+uchar r = 0;
+    r =(x + y + 1) >> 1;
+    return(r);
+}
+
+short
+static rhadd(short x, short y)
+{
+short r = 0;
+    r =(x + y + 1) >> 1;
+    return(r);
+}
+
+ushort
+static rhadd(ushort x, ushort y)
+{
+ushort r = 0;
+    r =(x + y + 1) >> 1;
+    return(r);
+}
+
+int
+static rhadd(int x, int y)
+{
+int r = 0;
+int overflow = ((x | y) & 1);
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+uint
+static rhadd(uint x, uint y)
+{
+uint r = 0;
+uint overflow = ((x | y) & 1);
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+
+__LONG
+static rhadd(__LONG x, __LONG y)
+{
+__LONG r = 0;
+__LONG overflow = ((x | y) & 1);
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+__ULONG
+static rhadd(__ULONG x, __ULONG y)
+{
+__ULONG r = 0;
+__ULONG overflow = ((x | y) & 1);
+    r = (x >> 1) + (y >> 1) + overflow;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* clz
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+
+char
+static clz(char x)
+{
+char r = 0;
+    r = clCntZeros16f(((uint)x & 0xFF));
+    r -= 8;
+    return(r);
+}
+
+uchar
+static clz(uchar x)
+{
+uchar r = 0;
+    r = clCntZeros16f(((uint)x & 0xFF));
+    r -= 8;
+    return(r);
+}
+
+short
+static clz(short x)
+{
+short r = 0;
+    r = (short)clCntZeros16f(((uint)x & 0xFFFF));
+    return(r);
+}
+
+ushort
+static clz(ushort x)
+{
+ushort r = 0;
+    r = (ushort)clCntZeros16f(((uint)x & 0xFFFF));
+    return(r);
+}
+
+int
+static clz(int x)
+{
+int r = 0;
+    r = (int)clCntZeros32f((uint)x);
+    return(r);
+}
+
+uint
+static clz(uint x)
+{
+uint r = 0;
+    r = (uint)clCntZeros32f(x);
+    return(r);
+}
+
+
+__LONG
+static clz(__LONG x)
+{
+__LONG r = 0;
+    r = (__LONG)clCntZeros64f((__ULONG)x);
+    return(r);
+}
+
+__ULONG
+static clz(__ULONG x)
+{
+__ULONG r = 0;
+    r = (__ULONG)clCntZeros64f(x);
+    return(r);
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mad_hi
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+static mad_hi(char a, char b, char c)
+{
+char r = 0;
+int mult = (int)a * (int)b;
+	r = (char)((mult >> 8 ) + c);
+    return(r);
+}
+
+uchar
+static mad_hi(uchar a, uchar b, uchar c)
+{
+uchar r = 0;
+uint mult = (uint)a *(uint) b;
+	r = (uchar)((mult >> 8 ) + c);
+    return(r);
+}
+
+short
+static mad_hi(short a, short b, short c)
+{
+short r = 0;
+int mult = (int)a * (int)b;
+	r = (short)((mult >> 16 ) + c);
+    return(r);
+}
+
+ushort
+static mad_hi(ushort a, ushort b, ushort c)
+{
+ushort r = 0;
+uint mult = (uint)a *(uint) b;
+	r = (ushort)((mult >> 16 ) + c);
+    return(r);
+}
+
+int
+static mad_hi(int a, int b, int c)
+{
+int r = 0;
+__LONG mult = (__LONG)a * (__LONG)b ;
+	r = (int)((mult >> 32 ) + c);
+    return(r);
+}
+
+uint
+static mad_hi(uint a, uint b, uint c)
+{
+uint r = 0;
+__ULONG mult = (__ULONG)a * (__ULONG)b ;
+	r = (uint)((mult >> 32 ) + c);
+    return(r);
+}
+
+
+__LONG
+static mad_hi(__LONG a, __LONG b, __LONG c)
+{
+__LONG r = 0;
+__LONG hi;
+__ULONG lo;
+
+    multiply_signed_64_by_64( a, b, &lo, &hi );
+	r = hi + c;
+    return(r);
+}
+
+__ULONG
+static mad_hi(__ULONG a, __ULONG b, __ULONG c)
+{
+__ULONG r = 0;
+__ULONG hi;
+__ULONG lo;
+    multiply_unsigned_64_by_64( a, b, &lo, &hi );
+	r = hi + c;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mad_sat
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+static mad_sat(char a, char b, char c)
+{
+char r = 0;
+int imult;
+    imult = ((int)a * (int)b);
+    imult += (int)c;
+	imult = _CL_MAX(imult, _CHAR_MIN);
+	r = _CL_MIN(imult, _CHAR_MAX);
+    return(r);
+}
+
+uchar
+static mad_sat(uchar a, uchar b, uchar c)
+{
+uchar r = 0;
+uint uimult;
+    uimult = ((uint)a * (uint)b);
+    uimult += (uint)c;
+	uimult = _CL_MAX(uimult, _UCHAR_MIN);
+	r = _CL_MIN(uimult, _UCHAR_MAX);
+    return(r);
+}
+
+short
+static mad_sat(short a, short b, short c)
+{
+short r = 0;
+int imult;
+    imult = ((int)a * (int)b);
+    imult += (int)c;
+	imult = _CL_MAX(imult, _SHRT_MIN);
+	r = _CL_MIN(imult, _SHRT_MAX);
+    return(r);
+}
+
+ushort
+static mad_sat(ushort a, ushort b, ushort c)
+{
+ushort r = 0;
+uint uimult;
+    uimult = ((uint)a * (uint)b);
+    uimult = add_sat(uimult,(uint)c); 
+	uimult = _CL_MAX(uimult, _USHRT_MIN);
+	r = _CL_MIN(uimult, _USHRT_MAX);
+    return(r);
+}
+
+int
+static mad_sat(int a, int b, int c)
+{
+int r = 0;
+__LONG lmult;
+    lmult = ((__LONG)a * (__LONG)b);
+    lmult += (__LONG)c;
+	lmult = _CL_MAX(lmult, (__LONG)_INT_MIN);
+	r = (int)(_CL_MIN(lmult, (__LONG)_INT_MAX));
+    return(r);
+}
+
+uint
+static mad_sat(uint a, uint b, uint c)
+{
+uint r = 0;
+__ULONG ulmult;
+    ulmult = ((__ULONG)a * (__ULONG)b);
+    ulmult = add_sat(ulmult,(__ULONG)c);
+	ulmult = _CL_MAX(ulmult, (__ULONG)_UINT_MIN);
+	r = (uint)(_CL_MIN(ulmult, (__ULONG)_UINT_MAX));
+    return(r);
+}
+
+
+__LONG
+static mad_sat(__LONG a, __LONG b, __LONG c)
+{
+__LONG r = 0;
+__LONG hi;
+__ULONG lo;
+    multiply_signed_64_by_64( a, b, &lo, &hi );
+__ULONG sum = lo + c;
+        // carry if overflow
+        if( c >= 0 )
+        {
+            if( lo > sum )
+            {
+                hi++;
+                if( _LONG_MIN == hi )
+                {
+                    hi = _LONG_MAX;
+                    sum = _ULONG_MAX;
+                }
+            }
+        }
+        else
+        {
+            if( lo < sum )
+            {
+                hi--;
+                if( _LONG_MAX == hi )
+                {
+                    hi = _LONG_MIN;
+                    sum = 0;
+                }
+            }
+        }
+
+        // saturate
+        if( hi > 0 )
+            sum = _LONG_MAX;
+        else if( hi < -1 )
+            sum = (__ULONG)_LONG_MIN;
+     r = (__LONG) sum;
+
+    return(r);
+}
+
+__ULONG
+static mad_sat(__ULONG a, __ULONG b, __ULONG c)
+{
+__ULONG r = 0;
+__ULONG hi;
+__ULONG lo;
+    multiply_unsigned_64_by_64( a, b, &lo, &hi );
+
+    lo += c;
+    hi += lo < c;  // carry if overflow
+    if( hi )
+	{
+       lo = 0xFFFFFFFFFFFFFFFFULL;
+	}
+    r = lo;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* max
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+static max(char x, char y)
+{
+char r = _CL_MAX(x,y);
+    return(r);
+}
+
+uchar
+static max(uchar x, uchar y)
+{
+uchar r = _CL_MAX(x,y);
+    return(r);
+}
+
+short
+static max(short x, short y)
+{
+short r = _CL_MAX(x,y);
+    return(r);
+}
+
+ushort
+static max(ushort x, ushort y)
+{
+ushort r = _CL_MAX(x,y);
+    return(r);
+}
+
+int
+static max(int x, int y)
+{
+int r = _CL_MAX(x,y);
+    return(r);
+}
+
+uint
+static max(uint x, uint y)
+{
+uint r = _CL_MAX(x,y);
+    return(r);
+}
+
+
+__LONG
+static max(__LONG x, __LONG y)
+{
+__LONG r = _CL_MAX(x,y);
+    return(r);
+}
+
+__ULONG
+static max(__ULONG x, __ULONG y)
+{
+__ULONG r = _CL_MAX(x,y);
+    return(r);
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* min
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+static min(char x, char y)
+{
+char r = _CL_MIN(x,y);
+    return(r);
+}
+
+uchar
+static min(uchar x, uchar y)
+{
+uchar r = _CL_MIN(x,y);
+    return(r);
+}
+
+short
+static min(short x, short y)
+{
+short r = _CL_MIN(x,y);
+    return(r);
+}
+
+ushort
+static min(ushort x, ushort y)
+{
+ushort r = _CL_MIN(x,y);
+    return(r);
+}
+
+int
+static min(int x, int y)
+{
+int r = _CL_MIN(x,y);
+    return(r);
+}
+
+uint
+static min(uint x, uint y)
+{
+uint r = _CL_MIN(x,y);
+    return(r);
+}
+
+
+__LONG
+static min(__LONG x, __LONG y)
+{
+__LONG r = _CL_MIN(x,y);
+    return(r);
+}
+
+__ULONG
+static min(__ULONG x, __ULONG y)
+{
+__ULONG r = _CL_MIN(x,y);
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mul_hi
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+static mul_hi(char x, char y)
+{
+char r = 0;
+int mult = (int)x * (int)y;
+	r = (char)(mult >> 8 );
+    return(r);
+}
+
+uchar
+static mul_hi(uchar x, uchar y)
+{
+uchar r = 0;
+uint mult = (uint)x * (uint)y;
+	r = (uchar)(mult >> 8 );
+    return(r);
+}
+
+short
+static mul_hi(short x, short y)
+{
+short r = 0;
+int mult = (int)x * (int)y;
+	r = (short)(mult >> 16 );
+    return(r);
+}
+
+ushort
+static mul_hi(ushort x, ushort y)
+{
+ushort r = 0;
+uint mult = (uint)x * (uint)y;
+	r = (ushort)(mult >> 16 );
+    return(r);
+}
+
+int
+static mul_hi(int x, int y)
+{
+int r = 0;
+__LONG mult = (__LONG)x * (__LONG)y;
+	r = (int)(mult >> 32 );
+    return(r);
+}
+
+uint
+static mul_hi(uint x, uint y)
+{
+uint r = 0;
+__ULONG mult = (__ULONG)x * (__ULONG)y;
+	r = (uint)(mult >> 32 );
+    return(r);
+}
+
+
+__LONG
+static mul_hi(__LONG x, __LONG y)
+{
+__LONG r = 0;
+__LONG hi;
+__ULONG lo;
+    multiply_signed_64_by_64( x, y, &lo, &hi );
+	r = hi;
+    return(r);
+}
+
+__ULONG
+static mul_hi(__ULONG x, __ULONG y)
+{
+__ULONG r = 0;
+__ULONG hi;
+__ULONG lo;
+    multiply_unsigned_64_by_64( x, y, &lo, &hi );
+	r = hi;
+    return(r);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* rotate
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+static rotate(char v, char i)
+{
+char r = 0;
+	i &= 7;
+    r = (char)(((uchar)v << i) | ((uchar)v >> (_UCHAR_MAXBITS - i )));
+    return(r);
+}
+
+uchar
+static rotate(uchar v, uchar i)
+{
+uchar r = 0;
+	i &= 7;
+    r = ((v << i) | (v >> (_UCHAR_MAXBITS - i )));
+    return(r);
+}
+
+short
+static rotate(short v, short i)
+{
+short r = 0;
+	i &= 15;
+    r = (short)(((ushort)v << i) | ((ushort)v >> (_USHRT_MAXBITS - i )));
+    return(r);
+}
+
+ushort
+static rotate(ushort v, ushort i)
+{
+ushort r = 0;
+	i &= 15;
+    r = ((v << i) | (v >> (_USHRT_MAXBITS - i )));
+    return(r);
+}
+
+int
+static rotate(int v, int i)
+{
+int r = 0;
+	i &= 31;
+    r = (int)(((uint)v << i) | ((uint)v >> (_UINT_MAXBITS - i )));
+    return(r);
+}
+
+uint
+static rotate(uint v, uint i)
+{
+uint r = 0;
+	i &= 31;
+    r = ((v << i) | (v >> (_UINT_MAXBITS - i )));
+    return(r);
+}
+
+
+__LONG
+static rotate(__LONG v, __LONG i)
+{
+__LONG r =0;
+	i &= 63;
+    r = (__LONG)(((__ULONG)v << i) | ((__ULONG)v >> (_ULONG_MAXBITS - i )));
+    return(r);
+}
+
+__ULONG
+static rotate(__ULONG v, __ULONG i)
+{
+__ULONG r = 0;
+	i &= 63;
+    r = ((v << i) | (v >> (_ULONG_MAXBITS - i )));
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* sub_sat
+*
+---------------------------------------------------------------------------------------------------------------------*/
+char
+static sub_sat(char x, char y)
+{
+char r = 0;
+int isub;
+    isub = (int)x - (int)y;
+	isub = _CL_MAX(isub, _CHAR_MIN);
+	r = _CL_MIN(isub, _CHAR_MAX);
+	return(r);
+}
+
+uchar
+static sub_sat(uchar x, uchar y)
+{
+uchar r = 0;
+int isub;
+    isub = (int)x - (int)y;
+	isub = _CL_MAX(isub, (int)_UCHAR_MIN);
+	r = _CL_MIN(isub, (int)_UCHAR_MAX);
+    return(r);
+}
+
+short
+static sub_sat(short x, short y)
+{
+short r = 0;
+int isub;
+    isub = (int)x - (int)y;
+	isub = _CL_MAX(isub, _SHRT_MIN);
+	r = _CL_MIN(isub, _SHRT_MAX);
+    return(r);
+}
+
+ushort
+static sub_sat(ushort x, ushort y)
+{
+ushort r = 0;
+int isub;
+    isub = (int)x - (int)y;
+	isub = _CL_MAX(isub, (int)_USHRT_MIN);
+	r = _CL_MIN(isub, (int)_USHRT_MAX);
+    return(r);
+}
+
+int
+static sub_sat(int x, int y)
+{
+int r = 0;
+__LONG lsub;
+    lsub = (__LONG)x - (__LONG)y;
+	lsub = _CL_MAX(lsub, (__LONG)_INT_MIN);
+	r = (int)(_CL_MIN(lsub, (__LONG)_INT_MAX));
+    return(r);
+}
+
+uint
+static sub_sat(uint x, uint y)
+{
+uint r = 0;
+__LONG lsub;
+    lsub = (__LONG)x - (__LONG)y;
+	lsub = _CL_MAX(lsub, (__LONG)_UINT_MIN);
+	r = (uint)(_CL_MIN(lsub, (__LONG)_UINT_MAX));
+    return(r);
+}
+
+
+__LONG
+static sub_sat(__LONG x, __LONG y)
+{
+__LONG r = 0;
+    r = add_sat(x, -y);
+    return(r);
+}
+
+__ULONG
+static sub_sat(__ULONG x, __ULONG y)
+{
+__ULONG r = 0;
+    r = x - y;
+	r = ( x < y ) ? 0 : r;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* upsample
+*
+---------------------------------------------------------------------------------------------------------------------*/
+short
+static upsampleu8(char hi, uchar lo)
+{
+short r = 0;
+    r = ((short)hi << 8) | lo;
+    return(r);
+}
+
+ushort
+static upsampleu8(uchar hi, uchar lo)
+{
+ushort r = 0;
+    r = ((ushort)hi << 8) | lo;
+    return(r);
+}
+
+int
+static upsampleu16(short hi, ushort lo)
+{
+int r = 0;
+    r = ((int)hi << 16) | lo;
+    return(r);
+}
+
+uint
+static upsampleu16(ushort hi, ushort lo)
+{
+uint r = 0;
+    r = ((uint)hi << 16) | lo;
+    return(r);
+}
+
+__LONG
+static upsampleu32(int hi, uint lo)
+{
+__LONG r = 0;
+    r = ((__LONG)hi << 32) | lo;
+    return(r);
+}
+
+static __ULONG
+upsampleu32(uint hi, uint lo)
+{
+__ULONG r = 0;
+    r = ((__ULONG)hi << 32) | lo;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mad24
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static int mul24(int x, int y);
+static uint mul24(uint x, uint y);
+
+static int
+mad24(int a, int b, int c)
+{
+int r = 0;
+    r = mul24(a,b) + c;
+    return(r);
+}
+
+static uint
+mad24(uint a, uint b, uint c)
+{
+uint r = 0;
+    r = mul24(a,b) + c;
+    return(r);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mul24
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static int
+mul24(int x, int y)
+{
+int r = 0;
+    x = ((x << 8) >> 8);
+    y = ((y << 8) >> 8);
+    r = x * y;
+    return(r);
+}
+
+static uint
+mul24(uint x, uint y)
+{
+uint r = 0;
+    x &= 0xffffff;
+    y &= 0xffffff;
+    r = x * y;
+    return(r);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* FLOATS
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+
+
+
+static
+float mul(float _a, float _b);
+static
+double mul(double _a, double _b);
+static double trunc( double _a);
+static float trunc( float _a);
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* acosh= ln(x + sqrt(x^2-1))
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static
+double acosh(double _a)
+{
+double ret = log(_a + sqrt(_a*_a - 1));
+      return(ret);
+}
+
+static
+float acosh(float _a)
+{
+float ret = (float)(double)acosh((double)_a);
+      return(ret);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* acospi= acos(x)/pi
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static
+double acospi(double _a)
+{
+double ret = acos(_a) / M_PI;
+      return(ret);
+}
+
+static
+float acospi(float _a)
+{
+float ret = (float)(double)acospi((double)_a);
+      return(ret);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* asinh= ln(x + sqrt(x^2+1))
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static
+double asinh(double _a)
+{
+double ret = log(_a + sqrt(_a*_a + 1));
+      return(ret);
+}
+
+static
+float asinh(float _a)
+{
+float ret = (float)(double)asinh((double)_a);
+      return(ret);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* asinpi= asin(x)/pi
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static
+double asinpi(double _a)
+{
+double ret = asin(_a) / M_PI;
+      return(ret);
+}
+
+static
+float asinpi(float _a)
+{
+float ret = (float)(double)asinpi((double)_a);
+      return(ret);
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* atanh= ln((sqrt(-x * x + 1) + 1) / x)
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+
+static
+double atanh(double _a)
+{
+double ret = log((sqrt(-_a * _a + 1) + 1) / _a);
+      return(ret);
+}
+
+static
+float atanh(float _a)
+{
+float ret = (float)(double)atanh((double)_a);
+      return(ret);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* atanpi= atan(x)/pi
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static
+double atanpi(double _a)
+{
+double ret = atan(_a) / M_PI;
+      return(ret);
+}
+
+static
+float atanpi(float _a)
+{
+float ret = (float)(double)atanpi((double)_a);
+      return(ret);
+}
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* atan2pi= atan2(x)/pi
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double atan2pi( double _a, double _b)
+{
+double ret = atan2(_a, _b) / M_PI;
+       return(ret);
+}
+static float atan2pi( float _a, float _b)
+{
+float ret;
+       ret = (float)(double)atan2pi((double)_a, (double)_b);
+	   return ret;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* cbrt
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static
+double cbrt(double _a)
+{
+double ret = pow(_a, 1./3.);
+      return(ret);
+}
+
+static
+float cbrt(float _a)
+{
+float ret = (float)(double)cbrt((double)_a);
+      return(ret);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* copysign(x,y)
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double copysign( double _a, double _b)
+{
+double thesamesign = ((_a >= 0 && _b >=0) || (_a <0 && _b < 0))? 1 : -1;
+double ret = _a * thesamesign;
+       return(ret);
+}
+static float copysign( float _a, float _b)
+{
+float thesamesign = ((_a >= 0 && _b >=0) || (_a <0 && _b < 0))? 1.f : -1.f;
+float ret = _a * thesamesign;
+       return(ret);
+}
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* cospi= cos(x * pi)
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static
+double cospi(double _a)
+{
+double ret = cos(_a * M_PI);
+      return(ret);
+}
+
+static
+float cospi(float _a)
+{
+float ret = (float)(double)cospi((double)_a);
+      return(ret);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* erfc
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static
+double erfc (double x)
+{
+    double sqrtPi, n, temp1, xSq, sum1, sum2;
+    sqrtPi = sqrt( M_PI );
+    x = abs( x );
+    n = 1.0;
+    xSq = 2.0 * x * x;
+    sum1 = 0.0;
+
+    if ( x > 3.23 ) {
+        /* asymptotic expansion */
+        temp1 = exp( - x * x ) / ( sqrtPi * x );
+        sum2 = temp1;
+
+        while ( sum1 != sum2 ) {
+            sum1 = sum2;
+            temp1 = -1.0 * ( temp1 / xSq );
+            sum2 += temp1;
+            n += 2.0;
+        }
+        return( sum2 );
+    }
+    else {
+        /* series expansion for small x */
+        temp1 = ( 2.0 / sqrtPi ) * exp( - x * x ) * x;
+        sum2 = temp1;
+        while ( sum1 != sum2 ) {
+            n += 2.0;
+            sum1 = sum2;
+            temp1 *= xSq / n;
+            sum2 += temp1;
+        }
+        return( 1.0 - sum2 );
+    }
+}
+
+static
+float erfc (float x)
+{
+    return((float)(double)erfc((double)x));
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* erf
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static
+double erf (double x)
+{
+    return(1. - erfc(x));
+}
+
+static
+float erf (float x)
+{
+    return((float)(double)erf((double)x));
+}
+
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* exp2
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static double exp2( double _a)
+{
+double ret = exp(log((double)2) * _a);
+	   return ret;
+}
+
+static float exp2( float _a)
+{
+float ret = (float)(double)exp2((double)_a);
+	   return ret;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* exp2
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static double exp10( double _a)
+{
+double ret = exp(log((double)10) * _a);
+	   return ret;
+}
+
+static float exp10( float _a)
+{
+float ret = (float)(double)exp10((double)_a);
+	   return ret;
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* expm1 = exp - 1.
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+
+static double expm1( double _a)
+{
+double ret = exp(_a) - 1.;
+	   return ret;
+}
+
+static float expm1( float _a)
+{
+float ret = (float)(double)expm1((double)_a);
+	   return ret;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* fdim(x,y)
+* x - y if x > y, +0 if x is less than or equal to y.
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double fdim( double _a, double _b)
+{
+double ret = (_a > _b) ? _a - _b : 0.;
+	   return ret;
+}
+
+static float fdim( float _a, float _b)
+{
+float ret = (float)(double)fdim((double)_a, (double)_b);
+	   return ret;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* fma(x,y,z)
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double fma( double _a, double _b, double _c)
+{
+double ret = (_a * _b) + _c;
+	   return ret;
+}
+
+static float fma( float _a, float _b, float _c)
+{
+float ret = (float)(double)fma((double)_a, (double)_b, (double)_c);
+	   return ret;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* fmax/fmin(x,y)
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double fmax( double _a, double _b)
+{
+double ret = max(_a, _b);
+	   return ret;
+}
+
+static float fmax( float _a, float _b)
+{
+float ret = (float)(double)fmax((double)_a, (double)_b);
+	   return ret;
+}
+
+static double fmin( double _a, double _b)
+{
+double ret = min(_a, _b);
+	   return ret;
+}
+
+static float fmin( float _a, float _b)
+{
+float ret = (float)(double)fmin((double)_a, (double)_b);
+	   return ret;
+}
+
+//Modulus. Returns x – y * trunc (x/y).
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* frac
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static double frac( double _a)
+{
+double ret = _a - ((_a>=0)? floor(_a) : ceil(_a));
+	   return ret;
+}
+
+static float frac( float _a)
+{
+float ret = _a - ((_a>=0)? floor(_a) : ceil(_a));
+	   return ret;
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* ilogb
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static int ilogb( double _a)
+{
+int ret;
+       ret = (int)log(_a);
+	   return ret;
+}
+
+static int ilogb( float _a)
+{
+int ret;
+       ret = ilogb((double)_a);
+	   return ret;
+}
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* gamma
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static double logb( double _a);
+static double log1p( double _a);
+
+
+
+
+/*-
+ * Copyright (c) 1992, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *	This product includes software developed by the University of
+ *	California, Berkeley and its contributors.
+ * 4. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+/*
+ * This code by P. McIlroy, Oct 1992;
+ *
+ * The financial support of UUNET Communications Services is greatfully
+ * acknowledged.
+ */
+
+//#include <math.h>
+//#include "mathimpl.h"
+//#include <errno.h>
+
+   /* Hooray, we have an IEEE machine */
+#  undef vccast
+#  define vc(name, value, x1,x2,x3,x4, bexp, xval) ;
+
+#  define ic(name, value, bexp, xval) \
+	static double const name = value;
+
+
+
+
+
+/*
+ * Functions internal to the math package, yet not static.
+ */
+static double	__exp__E(double, double);
+static double	__log__L(double);
+
+struct Double {double a, b;};
+static double __exp__D(double, double);
+static struct Double __log__D(double);
+
+
+
+/* EXP(X)
+ * RETURN THE EXPONENTIAL OF X
+ * DOUBLE PRECISION (IEEE 53 bits, VAX D FORMAT 56 BITS)
+ * CODED IN C BY K.C. NG, 1/19/85;
+ * REVISED BY K.C. NG on 2/6/85, 2/15/85, 3/7/85, 3/24/85, 4/16/85, 6/14/86.
+ *
+ * Required system supported functions:
+ *	scalb(x,n)
+ *	copysign(x,y)
+ *	finite(x)
+ *
+ * Method:
+ *	1. Argument Reduction: given the input x, find r and integer k such
+ *	   that
+ *	                   x = k*ln2 + r,  |r| <= 0.5*ln2 .
+ *	   r will be represented as r := z+c for better accuracy.
+ *
+ *	2. Compute exp(r) by
+ *
+ *		exp(r) = 1 + r + r*R1/(2-R1),
+ *	   where
+ *		R1 = x - x^2*(p1+x^2*(p2+x^2*(p3+x^2*(p4+p5*x^2)))).
+ *
+ *	3. exp(x) = 2^k * exp(r) .
+ *
+ * Special cases:
+ *	exp(INF) is INF, exp(NaN) is NaN;
+ *	exp(-INF)=  0;
+ *	for finite argument, only exp(0)=1 is exact.
+ *
+ * Accuracy:
+ *	exp(x) returns the exponential of x nearly rounded. In a test run
+ *	with 1,156,000 random arguments on a VAX, the maximum observed
+ *	error was 0.869 ulps (units in the last place).
+ *
+ * Constants:
+ * The hexadecimal values are the intended ones for the following constants.
+ * The decimal values may be used, provided that the compiler will convert
+ * from decimal to binary accurately enough to produce the hexadecimal values
+ * shown.
+ */
+
+
+ic(p1,     1.6666666666666601904E-1,  -3,  1.555555555553E)
+ic(p2,    -2.7777777777015593384E-3,  -9, -1.6C16C16BEBD93)
+ic(p3,     6.6137563214379343612E-5, -14,  1.1566AAF25DE2C)
+ic(p4,    -1.6533902205465251539E-6, -20, -1.BBD41C5D26BF1)
+ic(p5,     4.1381367970572384604E-8, -25,  1.6376972BEA4D0)
+ic(ln2hi,  6.9314718036912381649E-1,  -1,  1.62E42FEE00000)
+ic(ln2lo,  1.9082149292705877000E-10,-33,  1.A39EF35793C76)
+ic(lnhuge, 7.1602103751842355450E2,    9,  1.6602B15B7ECF2)
+ic(lntiny,-7.5137154372698068983E2,    9, -1.77AF8EBEAE354)
+ic(invln2, 1.4426950408889633870E0,    0,  1.71547652B82FE)
+
+
+/* returns exp(r = x + c) for |c| < |x| with no overlap.  */
+
+double __exp__D(double x, double c)
+{
+	double  z,hi,lo;
+	int k;
+
+	if ( x <= lnhuge ) {
+		if ( x >= lntiny ) {
+
+		    /* argument reduction : x --> x - k*ln2 */
+			z = invln2*x;
+			k = (int)(z + copysign(.5, x));
+
+		    /* express (x+c)-k*ln2 as hi-lo and let x=hi-lo rounded */
+
+			hi=(x-k*ln2hi);			/* Exact. */
+			x= hi - (lo = k*ln2lo-c);
+		    /* return 2^k*[1+x+x*c/(2+c)]  */
+			z=x*x;
+			c= x - z*(p1+z*(p2+z*(p3+z*(p4+z*p5))));
+			c = (x*c)/(2.0-c);
+
+			return  scalb(1.+(hi-(lo - c)), k);
+		}
+		/* end of x > lntiny */
+
+		else
+		     /* exp(-big#) underflows to zero */
+		     if(finite(x))  return(scalb(1.0,-5000));
+
+		     /* exp(-INF) is zero */
+		     else return(0.0);
+	}
+	/* end of x < lnhuge */
+
+	else
+	/* exp(INF) is INF, exp(+big#) overflows to INF */
+	    return( finite(x) ?  scalb(1.0,5000)  : x);
+}
+
+
+
+/* METHOD:
+ * x < 0: Use reflection formula, G(x) = pi/(sin(pi*x)*x*G(x))
+ * 	At negative integers, return +Inf, and set errno.
+ *
+ * x < 6.5:
+ *	Use argument reduction G(x+1) = xG(x) to reach the
+ *	range [1.066124,2.066124].  Use a rational
+ *	approximation centered at the minimum (x0+1) to
+ *	ensure monotonicity.
+ *
+ * x >= 6.5: Use the asymptotic approximation (Stirling's formula)
+ *	adjusted for equal-ripples:
+ *
+ *	log(G(x)) ~= (x-.5)*(log(x)-1) + .5(log(2*pi)-1) + 1/x*P(1/(x*x))
+ *
+ *	Keep extra precision in multiplying (x-.5)(log(x)-1), to
+ *	avoid premature round-off.
+ *
+ * Special values:
+ *	non-positive integer:	Set overflow trap; return +Inf;
+ *	x > 171.63:		Set overflow trap; return +Inf;
+ *	NaN: 			Set invalid trap;  return NaN
+ *
+ * Accuracy: Gamma(x) is accurate to within
+ *	x > 0:  error provably < 0.9ulp.
+ *	Maximum observed in 1,000,000 trials was .87ulp.
+ *	x < 0:
+ *	Maximum observed error < 4ulp in 1,000,000 trials.
+ */
+
+static double neg_gam(double);
+static double small_gam(double);
+static double smaller_gam(double);
+static struct Double large_gam(double);
+static struct Double ratfun_gam(double, double);
+
+/*
+ * Rational approximation, A0 + x*x*P(x)/Q(x), on the interval
+ * [1.066.., 2.066..] accurate to 4.25e-19.
+ */
+#define GLEFT -.3955078125	/* left boundary for rat. approx */
+#define x0 .461632144968362356785	/* xmin - 1 */
+
+#define ga0_hi 0.88560319441088874992
+#define ga0_lo -.00000000000000004996427036469019695
+#define P0	 6.21389571821820863029017800727e-01
+#define P1	 2.65757198651533466104979197553e-01
+#define P2	 5.53859446429917461063308081748e-03
+#define P3	 1.38456698304096573887145282811e-03
+#define P4	 2.40659950032711365819348969808e-03
+#define Q0	 1.45019531250000000000000000000e+00
+#define Q1	 1.06258521948016171343454061571e+00
+#define Q2	-2.07474561943859936441469926649e-01
+#define Q3	-1.46734131782005422506287573015e-01
+#define Q4	 3.07878176156175520361557573779e-02
+#define Q5	 5.12449347980666221336054633184e-03
+#define Q6	-1.76012741431666995019222898833e-03
+#define Q7	 9.35021023573788935372153030556e-05
+#define Q8	 6.13275507472443958924745652239e-06
+/*
+ * Constants for large x approximation (x in [6, Inf])
+ * (Accurate to 2.8*10^-19 absolute)
+ */
+#define lns2pi_hi 0.418945312500000
+#define lns2pi_lo -.000006779295327258219670263595
+#define Pa0	 8.33333333333333148296162562474e-02
+#define Pa1	-2.77777777774548123579378966497e-03
+#define Pa2	 7.93650778754435631476282786423e-04
+#define Pa3	-5.95235082566672847950717262222e-04
+#define Pa4	 8.41428560346653702135821806252e-04
+#define Pa5	-1.89773526463879200348872089421e-03
+#define Pa6	 5.69394463439411649408050664078e-03
+#define Pa7	-1.44705562421428915453880392761e-02
+
+static const double zero = 0., one = 1.0;// tiny = 1e-300;
+static int endian;
+/*
+ * TRUNC sets trailing bits in a floating-point number to zero.
+ * is a temporary variable.
+ */
+#define _IEEE		1
+#define TRUNC(x)	*(((int *) &x) + endian) &= 0xf8000000
+#define infnan(x)	0.0
+
+
+
+static double
+gamma(
+	double x)
+{
+	struct Double u;
+	endian = (*(int *) &one) ? 1 : 0;
+
+	if (x >= 6) {
+		if(x > 171.63)
+			return(one/zero);
+		u = large_gam(x);
+		return(__exp__D(u.a, u.b));
+	} else if (x >= 1.0 + GLEFT + x0) {
+		return (small_gam(x));
+	} else if (x > 1.e-17) {
+		return (smaller_gam(x));
+	} else if (x > -1.e-17) {
+		if (x == 0.0) {
+			if (!_IEEE) return (infnan(ERANGE));
+			else return (one/x);
+		}
+		(one+1e-20);	/* Raise inexact flag. */
+		return (one/x);
+	} else if (!finite(x)) {
+		if (_IEEE)		/* x = NaN, -Inf */
+			return (x*x);
+		else
+			return (infnan(EDOM));
+	} else {
+		return (neg_gam(x));
+	}
+}
+
+
+
+
+/*
+ * Accurate to max(ulp(1/128) absolute, 2^-66 relative) error.
+ */
+static
+struct Double
+large_gam(double x)
+{
+	double z;
+	double p;
+	struct Double t;
+	struct Double u;
+	struct Double v;
+
+	z = one/(x*x);
+	p = Pa0+z*(Pa1+z*(Pa2+z*(Pa3+z*(Pa4+z*(Pa5+z*(Pa6+z*Pa7))))));
+	p = p/x;
+
+	u = __log__D(x);
+	u.a -= one;
+	v.a = (x -= .5);
+	TRUNC(v.a);
+	v.b = x - v.a;
+	t.a = v.a*u.a;			/* t = (x-.5)*(log(x)-1) */
+	t.b = v.b*u.a + x*u.b;
+	/* return t.a + t.b + lns2pi_hi + lns2pi_lo + p */
+	t.b += lns2pi_lo; t.b += p;
+	u.a = lns2pi_hi + t.b; u.a += t.a;
+	u.b = t.a - u.a;
+	u.b += lns2pi_hi; u.b += t.b;
+	return (u);
+}
+/*
+ * Good to < 1 ulp.  (provably .90 ulp; .87 ulp on 1,000,000 runs.)
+ * It also has correct monotonicity.
+ */
+static
+double
+small_gam(double x)
+{
+	double y;
+	double ym1;
+	double t;
+	struct Double yy;
+	struct Double r;
+
+	y = x - one;
+	ym1 = y - one;
+	if (y <= 1.0 + (GLEFT + x0)) {
+		yy = ratfun_gam(y - x0, 0);
+		return (yy.a + yy.b);
+	}
+	r.a = y;
+	TRUNC(r.a);
+	yy.a = r.a - one;
+	y = ym1;
+	yy.b = r.b = y - yy.a;
+	/* Argument reduction: G(x+1) = x*G(x) */
+	for (ym1 = y-one; ym1 > GLEFT + x0; y = ym1--, yy.a--) {
+		t = r.a*yy.a;
+		r.b = r.a*yy.b + y*r.b;
+		r.a = t;
+		TRUNC(r.a);
+		r.b += (t - r.a);
+	}
+	/* Return r*gamma(y). */
+	yy = ratfun_gam(y - x0, 0);
+	y = r.b*(yy.a + yy.b) + r.a*yy.b;
+	y += yy.a*r.a;
+	return (y);
+}
+/*
+ * Good on (0, 1+x0+GLEFT].  Accurate to 1ulp.
+ */
+static
+double
+smaller_gam(double x)
+{
+	double t;
+	double d;
+	struct Double r;
+	struct Double xx;
+
+	if (x < x0 + GLEFT) {
+		t = x, TRUNC(t);
+		d = (t+x)*(x-t);
+		t *= t;
+		xx.a = (t + x), TRUNC(xx.a);
+		xx.b = x - xx.a; xx.b += t; xx.b += d;
+		t = (one-x0); t += x;
+		d = (one-x0); d -= t; d += x;
+		x = xx.a + xx.b;
+	} else {
+		xx.a =  x, TRUNC(xx.a);
+		xx.b = x - xx.a;
+		t = x - x0;
+		d = (-x0 -t); d += x;
+	}
+	r = ratfun_gam(t, d);
+	d = r.a/x, TRUNC(d);
+	r.a -= d*xx.a; r.a -= d*xx.b; r.a += r.b;
+	return (d + r.a/x);
+}
+/*
+ * returns (z+c)^2 * P(z)/Q(z) + a0
+ */
+static
+struct Double
+ratfun_gam(double z, double c)
+{
+	double p;
+	double q;
+	struct Double r;
+	struct Double t;
+
+	q = Q0 +z*(Q1+z*(Q2+z*(Q3+z*(Q4+z*(Q5+z*(Q6+z*(Q7+z*Q8)))))));
+	p = P0 + z*(P1 + z*(P2 + z*(P3 + z*P4)));
+
+	/* return r.a + r.b = a0 + (z+c)^2*p/q, with r.a truncated to 26 bits. */
+	p = p/q;
+	t.a = z, TRUNC(t.a);		/* t ~= z + c */
+	t.b = (z - t.a) + c;
+	t.b *= (t.a + z);
+	q = (t.a *= t.a);		/* t = (z+c)^2 */
+	TRUNC(t.a);
+	t.b += (q - t.a);
+	r.a = p, TRUNC(r.a);		/* r = P/Q */
+	r.b = p - r.a;
+	t.b = t.b*p + t.a*r.b + ga0_lo;
+	t.a *= r.a;			/* t = (z+c)^2*(P/Q) */
+	r.a = t.a + ga0_hi, TRUNC(r.a);
+	r.b = ((ga0_hi-r.a) + t.a) + t.b;
+	return (r);			/* r = a0 + t */
+}
+
+static
+double
+neg_gam(double x)
+{
+	int sgn = 1;
+	struct Double lg;
+	struct Double lsine;
+	double y;
+	double z;
+
+	y = floor(x + .5);
+	if (y == x) {		/* Negative integer. */
+		if(!_IEEE)
+			return (infnan(ERANGE));
+		else
+			return (one/zero);
+	}
+	z = fabs(x - y);
+	y = .5*ceil(x);
+	if (y == ceil(y))
+		sgn = -1;
+	if (z < .25)
+		z = sin(M_PI*z);
+	else
+		z = cos(M_PI*(0.5-z));
+	/* Special case: G(1-x) = Inf; G(x) may be nonzero. */
+	if (x < -170) {
+		if (x < -190)
+			return ((double)sgn*tiny*tiny);
+		y = one - x;		/* exact: 128 < |x| < 255 */
+		lg = large_gam(y);
+		lsine = __log__D(M_PI/z);	/* = TRUNC(log(u)) + small */
+		lg.a -= lsine.a;		/* exact (opposite signs) */
+		lg.b -= lsine.b;
+		y = -(lg.a + lg.b);
+		z = (y + lg.a) + lg.b;
+		y = __exp__D(y, z);
+		if (sgn < 0) y = -y;
+		return (y);
+	}
+	y = one-x;
+	if (one-y == x)
+		y = gamma(y);
+	else		/* 1-x is inexact */
+		y = -x*gamma(-x);
+	if (sgn < 0) y = -y;
+	return (M_PI / (y*z));
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* lgamma
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+
+
+
+/*
+ * Coded by Peter McIlroy, Nov 1992;
+ *
+ * The financial support of UUNET Communications Services is greatfully
+ * acknowledged.
+ */
+
+//#include <math.h>
+//#include <errno.h>
+
+//#include "mathimpl.h"
+
+
+
+
+/* log__L(Z)
+ *		LOG(1+X) - 2S			       X
+ * RETURN      ---------------  WHERE Z = S*S,  S = ------- , 0 <= Z <= .0294...
+ *		      S				     2 + X
+ *
+ * DOUBLE PRECISION (VAX D FORMAT 56 bits or IEEE DOUBLE 53 BITS)
+ * KERNEL FUNCTION FOR LOG; TO BE USED IN LOG1P, LOG, AND POW FUNCTIONS
+ * CODED IN C BY K.C. NG, 1/19/85;
+ * REVISED BY K.C. Ng, 2/3/85, 4/16/85.
+ *
+ * Method :
+ *	1. Polynomial approximation: let s = x/(2+x).
+ *	   Based on log(1+x) = log(1+s) - log(1-s)
+ *		 = 2s + 2/3 s**3 + 2/5 s**5 + .....,
+ *
+ *	   (log(1+x) - 2s)/s is computed by
+ *
+ *	       z*(L1 + z*(L2 + z*(... (L7 + z*L8)...)))
+ *
+ *	   where z=s*s. (See the listing below for Lk's values.) The
+ *	   coefficients are obtained by a special Remez algorithm.
+ *
+ * Accuracy:
+ *	Assuming no rounding error, the maximum magnitude of the approximation
+ *	error (absolute) is 2**(-58.49) for IEEE double, and 2**(-63.63)
+ *	for VAX D format.
+ *
+ * Constants:
+ * The hexadecimal values are the intended ones for the following constants.
+ * The decimal values may be used, provided that the compiler will convert
+ * from decimal to binary accurately enough to produce the hexadecimal values
+ * shown.
+ */
+
+
+
+ic(L1, 6.6666666666667340202E-1, -1, 1.5555555555592)
+ic(L2, 3.9999999999416702146E-1, -2, 1.999999997FF24)
+ic(L3, 2.8571428742008753154E-1, -2, 1.24924941E07B4)
+ic(L4, 2.2222198607186277597E-1, -3, 1.C71C52150BEA6)
+ic(L5, 1.8183562745289935658E-1, -3, 1.74663CC94342F)
+ic(L6, 1.5314087275331442206E-1, -3, 1.39A1EC014045B)
+ic(L7, 1.4795612545334174692E-1, -3, 1.2F039F0085122)
+
+
+static double __log__L(
+double z)
+{
+    return(z*(L1+z*(L2+z*(L3+z*(L4+z*(L5+z*(L6+z*L7)))))));
+	/* defined(vax)||defined(tahoe) */
+}
+
+/* Table-driven natural logarithm.
+ *
+ * This code was derived, with minor modifications, from:
+ *	Peter Tang, "Table-Driven Implementation of the
+ *	Logarithm in IEEE Floating-Point arithmetic." ACM Trans.
+ *	Math Software, vol 16. no 4, pp 378-400, Dec 1990).
+ *
+ * Calculates log(2^m*F*(1+f/F)), |f/j| <= 1/256,
+ * where F = j/128 for j an integer in [0, 128].
+ *
+ * log(2^m) = log2_hi*m + log2_tail*m
+ * since m is an integer, the dominant term is exact.
+ * m has at most 10 digits (for subnormal numbers),
+ * and log2_hi has 11 trailing zero bits.
+ *
+ * log(F) = logF_hi[j] + logF_lo[j] is in tabular form in log_table.h
+ * logF_hi[] + 512 is exact.
+ *
+ * log(1+f/F) = 2*f/(2*F + f) + 1/12 * (2*f/(2*F + f))**3 + ...
+ * the leading term is calculated to extra precision in two
+ * parts, the larger of which adds exactly to the dominant
+ * m and F terms.
+ * There are two cases:
+ *	1. when m, j are non-zero (m | j), use absolute
+ *	   precision for the leading term.
+ *	2. when m = j = 0, |1-x| < 1/256, and log(x) ~= (x-1).
+ *	   In this case, use a relative precision of 24 bits.
+ * (This is done differently in the original paper)
+ *
+ * Special cases:
+ *	0	return signalling -Inf
+ *	neg	return signalling NaN
+ *	+Inf	return +Inf
+*/
+
+
+
+
+#define N 128
+
+/* Table of log(Fj) = logF_head[j] + logF_tail[j], for Fj = 1+j/128.
+ * Used for generation of extend precision logarithms.
+ * The constant 35184372088832 is 2^45, so the divide is exact.
+ * It ensures correct reading of logF_head, even for inaccurate
+ * decimal-to-binary conversion routines.  (Everybody gets the
+ * right answer for integers less than 2^53.)
+ * Values for log(F) were generated using error < 10^-57 absolute
+ * with the bc -l package.
+*/
+static double const A1 = 	  .08333333333333178827;
+static double const A2 = 	  .01250000000377174923;
+static double const A3 =	 .002232139987919447809;
+static double const A4 =	.0004348877777076145742;
+
+static double const logF_head[N+1] = {
+	0.,
+	.007782140442060381246,
+	.015504186535963526694,
+	.023167059281547608406,
+	.030771658666765233647,
+	.038318864302141264488,
+	.045809536031242714670,
+	.053244514518837604555,
+	.060624621816486978786,
+	.067950661908525944454,
+	.075223421237524235039,
+	.082443669210988446138,
+	.089612158689760690322,
+	.096729626458454731618,
+	.103796793681567578460,
+	.110814366340264314203,
+	.117783035656430001836,
+	.124703478501032805070,
+	.131576357788617315236,
+	.138402322859292326029,
+	.145182009844575077295,
+	.151916042025732167530,
+	.158605030176659056451,
+	.165249572895390883786,
+	.171850256926518341060,
+	.178407657472689606947,
+	.184922338493834104156,
+	.191394852999565046047,
+	.197825743329758552135,
+	.204215541428766300668,
+	.210564769107350002741,
+	.216873938300523150246,
+	.223143551314024080056,
+	.229374101064877322642,
+	.235566071312860003672,
+	.241719936886966024758,
+	.247836163904594286577,
+	.253915209980732470285,
+	.259957524436686071567,
+	.265963548496984003577,
+	.271933715484010463114,
+	.277868451003087102435,
+	.283768173130738432519,
+	.289633292582948342896,
+	.295464212893421063199,
+	.301261330578199704177,
+	.307025035294827830512,
+	.312755710004239517729,
+	.318453731118097493890,
+	.324119468654316733591,
+	.329753286372579168528,
+	.335355541920762334484,
+	.340926586970454081892,
+	.346466767346100823488,
+	.351976423156884266063,
+	.357455888922231679316,
+	.362905493689140712376,
+	.368325561158599157352,
+	.373716409793814818840,
+	.379078352934811846353,
+	.384411698910298582632,
+	.389716751140440464951,
+	.394993808240542421117,
+	.400243164127459749579,
+	.405465108107819105498,
+	.410659924985338875558,
+	.415827895143593195825,
+	.420969294644237379543,
+	.426084395310681429691,
+	.431173464818130014464,
+	.436236766774527495726,
+	.441274560805140936281,
+	.446287102628048160113,
+	.451274644139630254358,
+	.456237433481874177232,
+	.461175715122408291790,
+	.466089729924533457960,
+	.470979715219073113985,
+	.475845904869856894947,
+	.480688529345570714212,
+	.485507815781602403149,
+	.490303988045525329653,
+	.495077266798034543171,
+	.499827869556611403822,
+	.504556010751912253908,
+	.509261901790523552335,
+	.513945751101346104405,
+	.518607764208354637958,
+	.523248143765158602036,
+	.527867089620485785417,
+	.532464798869114019908,
+	.537041465897345915436,
+	.541597282432121573947,
+	.546132437597407260909,
+	.550647117952394182793,
+	.555141507540611200965,
+	.559615787935399566777,
+	.564070138285387656651,
+	.568504735352689749561,
+	.572919753562018740922,
+	.577315365035246941260,
+	.581691739635061821900,
+	.586049045003164792433,
+	.590387446602107957005,
+	.594707107746216934174,
+	.599008189645246602594,
+	.603290851438941899687,
+	.607555250224322662688,
+	.611801541106615331955,
+	.616029877215623855590,
+	.620240409751204424537,
+	.624433288012369303032,
+	.628608659422752680256,
+	.632766669570628437213,
+	.636907462236194987781,
+	.641031179420679109171,
+	.645137961373620782978,
+	.649227946625615004450,
+	.653301272011958644725,
+	.657358072709030238911,
+	.661398482245203922502,
+	.665422632544505177065,
+	.669430653942981734871,
+	.673422675212350441142,
+	.677398823590920073911,
+	.681359224807238206267,
+	.685304003098281100392,
+	.689233281238557538017,
+	.693147180560117703862
+};
+
+static double const logF_tail[N+1] = {
+	0.,
+	-.00000000000000543229938420049,
+	 .00000000000000172745674997061,
+	-.00000000000001323017818229233,
+	-.00000000000001154527628289872,
+	-.00000000000000466529469958300,
+	 .00000000000005148849572685810,
+	-.00000000000002532168943117445,
+	-.00000000000005213620639136504,
+	-.00000000000001819506003016881,
+	 .00000000000006329065958724544,
+	 .00000000000008614512936087814,
+	-.00000000000007355770219435028,
+	 .00000000000009638067658552277,
+	 .00000000000007598636597194141,
+	 .00000000000002579999128306990,
+	-.00000000000004654729747598444,
+	-.00000000000007556920687451336,
+	 .00000000000010195735223708472,
+	-.00000000000017319034406422306,
+	-.00000000000007718001336828098,
+	 .00000000000010980754099855238,
+	-.00000000000002047235780046195,
+	-.00000000000008372091099235912,
+	 .00000000000014088127937111135,
+	 .00000000000012869017157588257,
+	 .00000000000017788850778198106,
+	 .00000000000006440856150696891,
+	 .00000000000016132822667240822,
+	-.00000000000007540916511956188,
+	-.00000000000000036507188831790,
+	 .00000000000009120937249914984,
+	 .00000000000018567570959796010,
+	-.00000000000003149265065191483,
+	-.00000000000009309459495196889,
+	 .00000000000017914338601329117,
+	-.00000000000001302979717330866,
+	 .00000000000023097385217586939,
+	 .00000000000023999540484211737,
+	 .00000000000015393776174455408,
+	-.00000000000036870428315837678,
+	 .00000000000036920375082080089,
+	-.00000000000009383417223663699,
+	 .00000000000009433398189512690,
+	 .00000000000041481318704258568,
+	-.00000000000003792316480209314,
+	 .00000000000008403156304792424,
+	-.00000000000034262934348285429,
+	 .00000000000043712191957429145,
+	-.00000000000010475750058776541,
+	-.00000000000011118671389559323,
+	 .00000000000037549577257259853,
+	 .00000000000013912841212197565,
+	 .00000000000010775743037572640,
+	 .00000000000029391859187648000,
+	-.00000000000042790509060060774,
+	 .00000000000022774076114039555,
+	 .00000000000010849569622967912,
+	-.00000000000023073801945705758,
+	 .00000000000015761203773969435,
+	 .00000000000003345710269544082,
+	-.00000000000041525158063436123,
+	 .00000000000032655698896907146,
+	-.00000000000044704265010452446,
+	 .00000000000034527647952039772,
+	-.00000000000007048962392109746,
+	 .00000000000011776978751369214,
+	-.00000000000010774341461609578,
+	 .00000000000021863343293215910,
+	 .00000000000024132639491333131,
+	 .00000000000039057462209830700,
+	-.00000000000026570679203560751,
+	 .00000000000037135141919592021,
+	-.00000000000017166921336082431,
+	-.00000000000028658285157914353,
+	-.00000000000023812542263446809,
+	 .00000000000006576659768580062,
+	-.00000000000028210143846181267,
+	 .00000000000010701931762114254,
+	 .00000000000018119346366441110,
+	 .00000000000009840465278232627,
+	-.00000000000033149150282752542,
+	-.00000000000018302857356041668,
+	-.00000000000016207400156744949,
+	 .00000000000048303314949553201,
+	-.00000000000071560553172382115,
+	 .00000000000088821239518571855,
+	-.00000000000030900580513238244,
+	-.00000000000061076551972851496,
+	 .00000000000035659969663347830,
+	 .00000000000035782396591276383,
+	-.00000000000046226087001544578,
+	 .00000000000062279762917225156,
+	 .00000000000072838947272065741,
+	 .00000000000026809646615211673,
+	-.00000000000010960825046059278,
+	 .00000000000002311949383800537,
+	-.00000000000058469058005299247,
+	-.00000000000002103748251144494,
+	-.00000000000023323182945587408,
+	-.00000000000042333694288141916,
+	-.00000000000043933937969737844,
+	 .00000000000041341647073835565,
+	 .00000000000006841763641591466,
+	 .00000000000047585534004430641,
+	 .00000000000083679678674757695,
+	-.00000000000085763734646658640,
+	 .00000000000021913281229340092,
+	-.00000000000062242842536431148,
+	-.00000000000010983594325438430,
+	 .00000000000065310431377633651,
+	-.00000000000047580199021710769,
+	-.00000000000037854251265457040,
+	 .00000000000040939233218678664,
+	 .00000000000087424383914858291,
+	 .00000000000025218188456842882,
+	-.00000000000003608131360422557,
+	-.00000000000050518555924280902,
+	 .00000000000078699403323355317,
+	-.00000000000067020876961949060,
+	 .00000000000016108575753932458,
+	 .00000000000058527188436251509,
+	-.00000000000035246757297904791,
+	-.00000000000018372084495629058,
+	 .00000000000088606689813494916,
+	 .00000000000066486268071468700,
+	 .00000000000063831615170646519,
+	 .00000000000025144230728376072,
+	-.00000000000017239444525614834
+};
+
+
+
+/*
+ * Extra precision variant, returning struct {double a, b;};
+ * log(x) = a+b to 63 bits, with a is rounded to 26 bits.
+ */
+struct Double
+__log__D(double x)
+{
+	int m;
+	int j;
+	double F;
+	double f;
+	double g;
+	double q;
+	double u;
+	double v;
+	double u2;
+	static double const one = 1.0;
+	volatile double u1;
+	struct Double r;
+
+	/* Argument reduction: 1 <= g < 2; x/2^m = g;	*/
+	/* y = F*(1 + f/F) for |f| <= 2^-8		*/
+
+	m = (int)logb(x);
+	g = ldexp(x, -m);
+	if (_IEEE && m == -1022) {
+		j = (int)logb(g), m += j;
+		g = ldexp(g, -j);
+	}
+	j = (int)(N*(g-1) + .5);
+	F = (1.0/N) * j + 1;
+	f = g - F;
+
+	g = 1/(2*F+f);
+	u = 2*f*g;
+	v = u*u;
+	q = u*v*(A1 + v*(A2 + v*(A3 + v*A4)));
+	if (m | j)
+		u1 = u + 513, u1 -= 513;
+	else
+		u1 = u, TRUNC(u1);
+	u2 = (2.0*(f - F*u1) - u1*f) * g;
+
+	u1 += m*logF_head[N] + logF_head[j];
+
+	u2 +=  logF_tail[j]; u2 += q;
+	u2 += logF_tail[N]*m;
+	r.a = u1 + u2;			/* Only difference is here */
+	TRUNC(r.a);
+	r.b = (u1 - r.a) + u2;
+	return (r);
+}
+
+
+
+/* Log gamma function.
+ * Error:  x > 0 error < 1.3ulp.
+ *	   x > 4, error < 1ulp.
+ *	   x > 9, error < .6ulp.
+ * 	   x < 0, all bets are off. (When G(x) ~ 1, log(G(x)) ~ 0)
+ * Method:
+ *	x > 6:
+ *		Use the asymptotic expansion (Stirling's Formula)
+ *	0 < x < 6:
+ *		Use gamma(x+1) = x*gamma(x) for argument reduction.
+ *		Use rational approximation in
+ *		the range 1.2, 2.5
+ *		Two approximations are used, one centered at the
+ *		minimum to ensure monotonicity; one centered at 2
+ *		to maintain small relative error.
+ *	x < 0:
+ *		Use the reflection formula,
+ *		G(1-x)G(x) = PI/sin(PI*x)
+ * Special values:
+ *	non-positive integer	returns +Inf.
+ *	NaN			returns NaN
+*/
+
+static double small_lgam(double);
+static double large_lgam(double);
+static double lgamma_r(double x, int *psigngam);
+static double neg_lgam(double, int *psigngam);
+//static double zero = 0.0, one = 1.0;
+//static int signgam;
+
+#define UNDERFL (1e-1020 * 1e-1020)
+
+#define LEFT	(1.0 - (x0 + .25))
+#define RIGHT	(x0 - .218)
+
+
+
+/*
+ * Constants for approximation in [1.244,1.712]
+*/
+//#define x0	0.461632144968362356785
+
+
+#define x0_lo	-.000000000000000015522348162858676890521
+#define a0_hi	-0.12148629128932952880859
+#define a0_lo	.0000000007534799204229502
+
+
+
+#define r0	-2.771227512955130520e-002
+#define r1	-2.980729795228150847e-001
+#define r2	-3.257411333183093394e-001
+#define r3	-1.126814387531706041e-001
+#define r4	-1.129130057170225562e-002
+#define r5	-2.259650588213369095e-005
+#define ls0	 1.714457160001714442e+000
+#define ls1	 2.786469504618194648e+000
+#define ls2	 1.564546365519179805e+000
+#define ls3	 3.485846389981109850e-001
+#define ls4	 2.467759345363656348e-002
+
+
+
+
+
+/* __pure double */
+static double
+lgamma(double x)
+{
+int signgam;
+    return(lgamma_r(x, &signgam));
+}
+
+
+static double
+lgamma_r(double x, int *psigngam)
+{
+
+/*
+ * Constants for approximation in [1.71, 2.5]
+*/
+
+
+static double a1_hi	=4.227843350984671344505727574870e-01;
+static double a1_lo	=4.670126436531227189e-18;
+static double lgp0	=3.224670334241133695662995251041e-01;
+static double lgp1	=3.569659696950364669021382724168e-01;
+static double lgp2	=1.342918716072560025853732668111e-01;
+static double lgp3	=1.950702176409779831089963408886e-02;
+static double lgp4	=8.546740251667538090796227834289e-04;
+static double lgq0	=1.000000000000000444089209850062e+00;
+static double lgq1	=1.315850076960161985084596381057e+00;
+static double lgq2	=6.274644311862156431658377186977e-01;
+static double lgq3	=1.304706631926259297049597307705e-01;
+static double lgq4	=1.102815279606722369265536798366e-02;
+static double lgq5	=2.512690594856678929537585620579e-04;
+static double lgq6	=-1.003597548112371003358107325598e-06;
+
+
+	double r;
+
+	*psigngam = 1;
+	endian = ((*(int *) &one)) ? 1 : 0;
+
+	if (!finite(x)) {
+		if (_IEEE)
+			return (x+x);
+		else return (infnan(EDOM));
+	}
+
+	if (x > 6 + RIGHT) {
+		r = large_lgam(x);
+		return (r);
+	} else if (x > 1e-16) {
+		return (small_lgam(x));
+	} else if (x > -1e-16) {
+		if (x < 0)
+			*psigngam = -1, x = -x;
+		return (-log(x));
+	} else {
+		return (neg_lgam(x, psigngam));
+	}
+}
+
+
+static double
+large_lgam(double x)
+{
+
+/*
+ * Stirling's Formula, adjusted for equal-ripple. x in [6,Inf].
+*/
+static double lns2pi	=.418938533204672741780329736405;
+static double pb0	 =8.33333333333333148296162562474e-02;
+static double pb1	=-2.77777777774548123579378966497e-03;
+static double pb2	 =7.93650778754435631476282786423e-04;
+static double pb3	=-5.95235082566672847950717262222e-04;
+static double pb4	 =8.41428560346653702135821806252e-04;
+static double pb5	=-1.89773526463879200348872089421e-03;
+static double pb6	 =5.69394463439411649408050664078e-03;
+static double pb7	=-1.44705562421428915453880392761e-02;
+
+	double z;
+	double p;
+	double x1;
+//	int i;
+	struct Double t, u, v;
+	u = __log__D(x);
+	u.a -= 1.0;
+	if (x > 1e15) {
+		v.a = x - 0.5;
+		TRUNC(v.a);
+		v.b = (x - v.a) - 0.5;
+		t.a = u.a*v.a;
+		t.b = x*u.b + v.b*u.a;
+		if (_IEEE == 0 && !finite(t.a))
+			return(infnan(ERANGE));
+		return(t.a + t.b);
+	}
+	x1 = 1./x;
+	z = x1*x1;
+	
+	p = pb0+z*(pb1+z*(pb2+z*(pb3+z*(pb4+z*(pb5+z*(pb6+z*pb7))))));
+					/* error in approximation = 2.8e-19 */
+	p = p*x1;			/* error < 2.3e-18 absolute */
+					/* 0 < p < 1/64 (at x = 5.5) */
+	v.a = x = x - 0.5;
+	TRUNC(v.a);			/* truncate v.a to 26 bits. */
+	v.b = x - v.a;
+	t.a = v.a*u.a;			/* t = (x-.5)*(log(x)-1) */
+	t.b = v.b*u.a + x*u.b;
+	t.b += p; t.b += lns2pi;	/* return t + lns2pi + p */
+	return (t.a + t.b);
+	
+
+}
+
+static double
+small_lgam(double x)
+{
+static double a1_hi	=4.227843350984671344505727574870e-01;
+static double a1_lo	=4.670126436531227189e-18;
+static double lgp0	=3.224670334241133695662995251041e-01;
+static double lgp1	=3.569659696950364669021382724168e-01;
+static double lgp2	=1.342918716072560025853732668111e-01;
+static double lgp3	=1.950702176409779831089963408886e-02;
+static double lgp4	=8.546740251667538090796227834289e-04;
+static double lgq0	=1.000000000000000444089209850062e+00;
+static double lgq1	=1.315850076960161985084596381057e+00;
+static double lgq2	=6.274644311862156431658377186977e-01;
+static double lgq3	=1.304706631926259297049597307705e-01;
+static double lgq4	=1.102815279606722369265536798366e-02;
+static double lgq5	=2.512690594856678929537585620579e-04;
+static double lgq6	=-1.003597548112371003358107325598e-06;
+
+	int x_int;
+	double y, z, t, r = 0, p, q, hi, lo;
+	struct Double rr;
+	x_int = (int)(x + .5);
+	y = x - x_int;
+	if (x_int <= 2 && y > RIGHT) {
+		t = y - x0;
+		y--; x_int++;
+		goto CONTINUE;
+	} else if (y < -LEFT) {
+		t = y +(1.0-x0);
+CONTINUE:
+		z = t - x0_lo;
+		p = r0+z*(r1+z*(r2+z*(r3+z*(r4+z*r5))));
+		q = ls0+z*(ls1+z*(ls2+z*(ls3+z*ls4)));
+		r = t*(z*(p/q) - x0_lo);
+		t = .5*t*t;
+		z = 1.0;
+		switch (x_int) {
+		case 6:	z  = (y + 5);
+		case 5:	z *= (y + 4);
+		case 4:	z *= (y + 3);
+		case 3:	z *= (y + 2);
+			rr = __log__D(z);
+			rr.b += a0_lo; rr.a += a0_hi;
+			return(((r+rr.b)+t+rr.a));
+		case 2: return(((r+a0_lo)+t)+a0_hi);
+		case 0: r -= log1p(x);
+		default: rr = __log__D(x);
+			rr.a -= a0_hi; rr.b -= a0_lo;
+			return(((r - rr.b) + t) - rr.a);
+		}
+	} else {
+		p = lgp0+y*(lgp1+y*(lgp2+y*(lgp3+y*lgp4)));
+		q = lgq0+y*(lgq1+y*(lgq2+y*(lgq3+y*(lgq4+y*(lgq5+y*lgq6)))));
+		p = p*(y/q);
+		t = (double)(float) y;
+		z = y-t;
+		hi = (double)(float) (p+a1_hi);
+		lo = a1_hi - hi; lo += p; lo += a1_lo;
+		r = lo*y + z*hi;	/* q + r = y*(a0+p/q) */
+		q = hi*t;
+		z = 1.0;
+		switch (x_int) {
+		case 6:	z  = (y + 5);
+		case 5:	z *= (y + 4);
+		case 4:	z *= (y + 3);
+		case 3:	z *= (y + 2);
+			rr = __log__D(z);
+			r += rr.b; r += q;
+			return(rr.a + r);
+		case 2:	return (q+ r);
+		case 0: rr = __log__D(x);
+			r -= rr.b; r -= log1p(x);
+			r += q; r-= rr.a;
+			return(r);
+		default: rr = __log__D(x);
+			r -= rr.b;
+			q -= rr.a;
+			return (r+q);
+		}
+	}
+}
+
+
+
+static double
+neg_lgam(double x, int *psigngam)
+{
+	int xi;
+	double y, z, one = 1.0, zero = 0.0;
+
+	/* avoid destructive cancellation as much as possible */
+	if (x > -170) {
+		xi = (int)x;
+		if (xi == x) {
+			if (_IEEE)
+				return(one/zero);
+			else
+				return(infnan(ERANGE));
+		}
+		y = gamma(x);
+		if (y < 0)
+			y = -y, *psigngam = -1;
+		return (log(y));
+	}
+	z = floor(x + .5);
+	if (z == x) {		/* convention: G(-(integer)) -> +Inf */
+		if (_IEEE)
+			return (one/zero);
+		else
+			return (infnan(ERANGE));
+	}
+	y = .5*ceil(x);
+	if (y == ceil(y))
+		*psigngam = -1;
+	x = -x;
+	z = fabs(x + z);	/* 0 < z <= .5 */
+	if (z < .25)
+		z = sin(M_PI*z);
+	else
+		z = cos(M_PI*(0.5-z));
+	z = log(M_PI/(z*x));
+	y = large_lgam(x);
+	return (z - y);
+}
+
+
+static float
+gamma( float x)
+{
+   return((float)gamma((double)x));
+}
+
+static float
+lgamma( float x)
+{
+   return((float)lgamma((double)x));
+}
+
+static float
+lgamma_r( float x, int *psign)
+{
+   return((float)lgamma_r((double)x,psign));
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* log2(x) = lnx/ln2
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double log2( double _a)
+{
+double ret;
+       ret = log(_a)/log(2.);
+	   return ret;
+}
+
+static float log2( float _a)
+{
+float ret;
+       ret = (float)log2((double)_a);
+	   return ret;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* log10(x) = lnx/ln10
+*
+---------------------------------------------------------------------------------------------------------------------*/
+/*
+static double log10( double _a)
+{
+double ret;
+       ret = log(_a)/log(10.);
+	   return ret;
+}
+static float log10( float _a)
+{
+float ret;
+       ret = log10((double)_a);
+	   return ret;
+}
+*/
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* log1p =  ln(1.0 + x).
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double log1p( double _a)
+{
+double ret;
+       ret = log(_a + 1.);
+	   return ret;
+}
+
+static float log1p( float _a)
+{
+float ret;
+       ret = (float)log1p((double)_a);
+	   return ret;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* logb =  (double)(int)ln(fabs(x)).
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double logb( double _a)
+{
+double ret;
+       ret = (double)(int)log(fabs(_a ));
+	   return ret;
+}
+
+static float logb( float _a)
+{
+float ret;
+       ret = (float)logb((double)_a);
+	   return ret;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* logb =  (double)(int)ln(fabs(x)).
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double mad( double _a, double _b, double _c)
+{
+double ret;
+       ret =  _a * _b + _c;
+	   return ret;
+}
+
+static float mad( float _a, float _b, float _c)
+{
+float ret;
+       ret = (float)(double)mad((double)_a,(double)_b,(double)_c);
+	   return ret;
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* mul
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static
+float mul(float _a, float _b)
+{
+float ret = _a * _b;
+}
+
+static
+double mul(double _a, double _b)
+{
+double ret = _a * _b;
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* remainder
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+
+/* __ieee754_remainder(x,p)
+ * Return :
+ *      returns  x REM p  =  x - [x/p]*p as if in infinite
+ *      precise arithmetic, where [x/p] is the (infinite bit)
+ *      integer nearest x/p (in half way case choose the even one).
+ * Method :
+ *      Based on fmod() return x-[x/p]chopped*p exactlp.
+ */
+
+
+
+
+//static const double zero = 0.0;
+
+static
+double remainder(double x, double p)
+{
+        fd_twoints u;
+        int hx,hp;
+        unsigned sx,lx,lp;
+        double p_half;
+
+        u.d = x;
+        hx = __HI(u);           /* high word of x */
+        lx = __LO(u);           /* low  word of x */
+        u.d = p;
+        hp = __HI(u);           /* high word of p */
+        lp = __LO(u);           /* low  word of p */
+        sx = hx&0x80000000;
+        hp &= 0x7fffffff;
+        hx &= 0x7fffffff;
+
+    /* purge off exception values */
+        if((hp|lp)==0) return (x*p)/(x*p);      /* p = 0 */
+        if((hx>=0x7ff00000)||                   /* x not finite */
+          ((hp>=0x7ff00000)&&                   /* p is NaN */
+          (((hp-0x7ff00000)|lp)!=0)))
+            return (x*p)/(x*p);
+
+
+        if (hp<=0x7fdfffff) x = fmod(x,p+p);  /* now x < 2p */
+        if (((hx-hp)|(lx-lp))==0) return zero*x;
+        x  = fabs(x);
+        p  = fabs(p);
+        if (hp<0x00200000) {
+            if(x+x>p) {
+                x-=p;
+                if(x+x>=p) x -= p;
+            }
+        } else {
+            p_half = 0.5*p;
+            if(x>p_half) {
+                x-=p;
+                if(x>=p_half) x -= p;
+            }
+        }
+        u.d = x;
+        __HI(u) ^= sx;
+        x = u.d;
+        return x;
+}
+
+
+static
+float remainder(float x, float p)
+{
+   return((float)remainder((double)x, (double)p));
+}
+
+static
+double remquo(double x, double p, int *pquo)
+{
+double ret = remainder(x,p);
+double q = copysign((x-ret)/p, x/p);
+__int64 qn = (__int64)q;
+      qn = (qn < 0 )? -qn : qn;
+      *pquo = qn & 0x7f;
+      *pquo *= (q < 0. )? -1 : 1;
+      return(ret);       
+}
+
+static
+float remquo(float x, float p, int *pquo)
+{
+      return((float)remquo(x,p,pquo));       
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* rint
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static float
+rint (float x)
+{
+   return((float)rint((double)x));
+}
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* rootn
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double rootn( double _a, int n)
+{
+double ret = pow(_a, 1./(double)n);
+       return(ret);
+}
+static float rootn( float _a, int n)
+{
+float ret = (float)(double)rootn((double)_a, n);
+       return(ret);
+}
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* round
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double round( double _a)
+{
+double ret = ((_a - floor(_a)) < 0.5) ? floor(_a) : floor(_a) + 1.;
+       return(ret);
+}
+
+static float round( float _a)
+{
+float ret = (float)(double)round((double)_a);
+       return(ret);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* rsqrt
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double rsqrt( double _a)
+{
+double ret = 1./ pow(_a, 0.5);
+       return(ret);
+}
+
+static float rsqrt( float _a)
+{
+float ret = (float)(double)rsqrt((double)_a);
+       return(ret);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* sincos
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double sincos( double _a, double* _b)
+{
+double ret = sin(_a);
+       *_b = cos(_a);
+       return(ret);       
+}
+
+static float sincos( float _a, float* _b)
+{
+double b;
+float ret = (float)(double)sincos((double)_a, &b);
+       *_b = (float)b;
+       return(ret);       
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* sinpi= sin(x * pi)
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static
+double sinpi(double _a)
+{
+double ret = sin(_a * M_PI);
+      return(ret);
+}
+
+static
+float sinpi(float _a)
+{
+float ret = (float)(double)sinpi((double)_a);
+      return(ret);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* tanpi= tan(x * pi)
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static
+double tanpi(double _a)
+{
+double ret = tan(_a * M_PI);
+      return(ret);
+}
+
+static
+float tanpi(float _a)
+{
+float ret = (float)(double)tanpi((double)_a);
+      return(ret);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* tgamma
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double
+tgamma(double x)
+{
+    return(gamma(x));
+}
+
+static float
+tgamma(float x)
+{
+    return(gamma(x));
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* trunc
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static double trunc( double _a)
+{
+double ret = (double)(__int64)_a;
+	   return ret;
+}
+
+static float trunc( float _a)
+{
+float ret = (float)(double)trunc((double)_a);
+	   return ret;
+}
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* native
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+
+static float native_cos( float _a)
+{
+float ret;
+       ret = cos(_a);
+	   return ret;
+}
+
+static double native_cos( double _a)
+{
+double ret;
+       ret = cos(_a);
+	   return ret;
+}
+
+
+static double native_divide( double _a, double _b)
+{
+double ret;
+       ret = _a /_b;
+	   return ret;
+}
+
+static float native_divide( float _a, float _b)
+{
+float ret = (float)native_divide((double)_a, (double)_b);
+	   return ret;
+}
+
+static float native_exp( float _a)
+{
+float ret;
+       ret = exp(_a);
+	   return ret;
+}
+
+static double native_exp( double _a)
+{
+double ret;
+       ret = exp(_a);
+	   return ret;
+}
+
+static float native_exp2( float _a)
+{
+float ret;
+       ret = exp2(_a);
+	   return ret;
+}
+
+static double native_exp2( double _a)
+{
+double ret;
+       ret = exp2(_a);
+	   return ret;
+}
+
+static float native_exp10( float _a)
+{
+float ret;
+       ret = exp10(_a);
+	   return ret;
+}
+
+static double native_exp10( double _a)
+{
+double ret;
+       ret = exp10(_a);
+	   return ret;
+}
+
+static float native_log( float _a)
+{
+float ret;
+       ret = log(_a);
+	   return ret;
+}
+
+static double native_log( double _a)
+{
+double ret;
+       ret = log(_a);
+	   return ret;
+}
+
+static float native_log2( float _a)
+{
+float ret;
+       ret = log2(_a);
+	   return ret;
+}
+
+static double native_log2( double _a)
+{
+double ret;
+       ret = log2(_a);
+	   return ret;
+}
+
+static float native_log10( float _a)
+{
+float ret;
+       ret = log10(_a);
+	   return ret;
+}
+
+static double native_log10( double _a)
+{
+double ret;
+       ret = log10(_a);
+	   return ret;
+}
+
+static float native_powr( float _a, float _b)
+{
+float ret;
+       ret = pow(_a, _b);
+	   return ret;
+}
+
+static double native_powr( double _a, double _b)
+{
+double ret;
+       ret = pow(_a, _b);
+	   return ret;
+}
+
+static float native_recip( float _a)
+{
+float ret;
+       ret = native_divide(1.f,_a);
+	   return ret;
+}
+
+static double native_recip( double _a)
+{
+double ret;
+       ret = native_divide(1.,_a);
+	   return ret;
+}
+
+static float native_rsqrt( float _a)
+{
+float ret;
+       ret = rsqrt(_a);
+	   return ret;
+}
+
+static double native_rsqrt( double _a)
+{
+double ret;
+       ret = rsqrt(_a);
+	   return ret;
+}
+
+static float native_sin( float _a)
+{
+float ret;
+       ret = sin(_a);
+	   return ret;
+}
+
+static double native_sin( double _a)
+{
+double ret;
+       ret = sin(_a);
+	   return ret;
+}
+
+static float native_sqrt( float _a)
+{
+float ret;
+       ret = sqrt(_a);
+	   return ret;
+}
+
+static double native_sqrt( double _a)
+{
+double ret;
+       ret = sqrt(_a);
+	   return ret;
+}
+
+static float native_tan( float _a)
+{
+float ret;
+       ret = tan(_a);
+	   return ret;
+}
+
+static double native_tan( double _a)
+{
+double ret;
+       ret = tan(_a);
+	   return ret;
+}
+
+
+/************************************************************************
+*
+* media
+*
+************************************************************************/
+/************************************************************************
+*
+* amd_pack
+uint amd_pack(float4 src)
+Return value
+((((uint)src[0]) & 0xFF) << 0) +
+((((uint)src[1]) & 0xFF) << 8) +
+((((uint)src[2]) & 0xFF) << 16) +
+((((uint)src[3]) & 0xFF) << 24)
+*
+************************************************************************/
+/************************************************************************
+*
+* amd_unpack
+*
+************************************************************************/
+static
+float amd_unpack0 (uint src)
+{
+    return((float)(src & 0xff));
+}
+static
+float amd_unpack1 (uint src)
+{
+    return((float)((src >> 8) & 0xff));
+}
+static
+float amd_unpack2 (uint src)
+{
+    return((float)((src >> 16) & 0xff));
+}
+static
+float amd_unpack3 (uint src)
+{
+    return((float)((src >> 24) & 0xff));
+}
+
+static
+uint amd_bitalign (uint src0, uint src1, uint src2)
+{
+  return((uint) (((((__LONG)src0) << 32) | (__LONG)src1) >> (src2 & 31)));
+}
+static
+uint amd_bytealign (uint src0, uint src1, uint src2)
+{
+   return((uint) (((((__LONG)src0) << 32) | (__LONG)src1) >> ((src2 & 3)*8)));
+}
+static
+uint amd_lerp (uint src0, uint src1, uint src2)
+{
+  return (((((src0 >> 0) & 0xFF) + ((src1 >> 0) & 0xFF) + ((src2 >> 0) & 1)) >> 1) << 0) +
+         (((((src0 >> 8) & 0xFF) + ((src1 >> 8) & 0xFF) + ((src2 >> 8) & 1)) >> 1) << 8) +
+         (((((src0 >> 16) & 0xFF) + ((src1 >> 16) & 0xFF) + ((src2 >> 16) & 1)) >> 1) << 16) +
+         (((((src0 >> 24) & 0xFF) + ((src1 >> 24) & 0xFF) + ((src2 >> 24) & 1)) >> 1) << 24) ;
+ }
+
+static
+uint amd_sad (uint src0, uint src1, uint src2)
+{
+ return src2 +
+       abs((int)((src0 >> 0) & 0xFF) - (int)((src1 >> 0) & 0xFF)) +
+       abs((int)((src0 >> 8) & 0xFF) - (int)((src1 >> 8) & 0xFF)) +
+       abs((int)((src0 >> 16) & 0xFF) - (int)((src1 >> 16) & 0xFF)) +
+       abs((int)((src0 >> 24) & 0xFF) - (int)((src1 >> 24) & 0xFF));
+}
+static
+uint  amd_sadhi (uint src0, uint src1, uint src2)
+{
+    uint dst = src2 + 
+               abs((int)(((src0 >>  0) & 0xff) - (int)((src1 >>  0) & 0xff)) << 16) +
+               abs((int)(((src0 >>  8) & 0xff) - (int)((src1 >>  8) & 0xff)) << 16) +
+               abs((int)(((src0 >> 16) & 0xff) - (int)((src1 >> 16) & 0xff)) << 16) +
+               abs((int)(((src0 >> 24) & 0xff) - (int)((src1 >> 24) & 0xff)) << 16);
+          return(dst);
+}
+/************************************************************************
+*
+* common
+*
+************************************************************************/
+
+
+
+static double
+clamp(double x, double xmin, double xmax)
+{
+double r = 0;
+    r = fmin( fmax(x, xmin), xmax);
+    return(r);
+}
+
+static float
+clamp(float x, float xmin, float xmax)
+{
+float r = 0;
+    r = fmin( fmax(x, xmin), xmax);
+    return(r);
+}
+
+static double
+degrees(double radians)
+{
+double r = 0;
+    r = (180.0 / (double)M_PI)* radians;
+    return(r);
+}
+
+static float
+degrees(float radians)
+{
+float r = 0;
+    r = (float)degrees((double)radians);
+    return(r);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* max
+*
+---------------------------------------------------------------------------------------------------------------------*/
+float
+static max(float x, float y)
+{
+float r = _CL_MAX(x,y);
+    return(r);
+}
+
+double
+static max(double x, double y)
+{
+double r = _CL_MAX(x,y);
+    return(r);
+}
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* min
+*
+---------------------------------------------------------------------------------------------------------------------*/
+float
+static min(float x, float y)
+{
+float r = _CL_MIN(x,y);
+    return(r);
+}
+
+double
+static min(double x, double y)
+{
+double r = _CL_MIN(x,y);
+    return(r);
+}
+
+static double
+mix(double x, double y, double a)
+{
+double r = 0;
+	r = x + (y - x) * a;
+    return(r);
+}
+
+
+static float
+mix(float x, float y, float a)
+{
+float r = (float)mix((double)x, (double)y, (double)a);
+    return(r);
+}
+
+static double
+radians(double degrees)
+{
+double r = ((double)M_PI / 180.0)* degrees;
+    return(r);
+}
+
+
+static float
+radians(float degrees)
+{
+float r = (float)radians((double)degrees);
+    return(r);
+}
+
+static double
+step(double edge, double x)
+{
+double r = 0;
+    r = ( x < edge ) ? 0 : 1.f;
+    return(r);
+}
+
+static float
+step(float edge, float x)
+{
+float r = (float)step((double)edge, (double)x);
+    return(r);
+}
+
+static double
+smoothstep(double edge0, double edge1, double x)
+{
+double r = 0;
+double t = (x - edge0) / (edge1 - edge0);
+    t = clamp(t, 0, 1.);
+    r = t * t * (3. - 2. * t);
+    return(r);
+}
+
+
+static float
+smoothstep(float edge0, float edge1, float x)
+{
+float r = (float)smoothstep((double)edge0, (double)edge1, (double)x);
+    return(r);
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* dot
+*
+---------------------------------------------------------------------------------------------------------------------*/
+static
+float dot(float _a, float _b)
+{
+float ret = mul(_a, _b);
+}
+
+static
+double dot(double _a, double _b)
+{
+double ret = mul(_a, _b);
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* distance
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static double distance(double x, double y)
+{
+double r = 0;
+    r = fabs(x-y);
+    return ( r );
+}
+
+
+static float distance(float x, float y)
+{
+float r = 0;
+    r = fabs(x-y);
+    return ( r );
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* fast_distance
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static float
+fast_distance(float x, float y)
+{
+float r = distance(x,y);
+    return ( r );
+}
+
+static double
+fast_distance(double x, double y)
+{
+double r = distance(x,y);
+    return ( r );
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* length
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static double
+length(double p)
+{
+double r = 0;
+    r = fabs(p);
+    return ( r );
+}
+
+static float
+length(float p)
+{
+float r = 0;
+    r = fabs(p);
+    return ( r );
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* fast_length
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static double
+fast_length(double p)
+{
+double r = length(p);
+    return ( r );
+}
+
+
+static float
+fast_length(float p)
+{
+float r = length(p);
+    return ( r );
+}
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* normalize
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static double
+normalize(double p)
+{
+double r = 0;
+	r = p;
+	r = (p < 0. && isinf(p)) ? -1. : r;
+	r = (p > 0. && isinf(p)) ? 1. : r;
+    return ( r );
+}
+
+
+static float
+normalize(float p)
+{
+float r = (float)normalize((double)p);
+    return ( r );
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* fast_normalize
+*
+---------------------------------------------------------------------------------------------------------------------*/
+
+static float
+fast_normalize(float p)
+{
+float r = 0;
+    r = normalize(p);
+    return ( r );
+}
+
+
+static double
+fast_normalize(double p)
+{
+double r = 0;
+    r = normalize(p);
+    return ( r );
+}
+
+
