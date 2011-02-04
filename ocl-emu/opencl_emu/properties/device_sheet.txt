@@ -1,0 +1,16 @@
+class=evergreen
+name=Juniper
+Juniper.se=1
+Juniper.SIMD=10
+Juniper.width=64
+Juniper.local_memory=32768
+name=Redwood
+Redwood.se=1
+Redwood.SIMD=5
+Redwood.width=64
+Redwood.local_memory=32768
+name=Cedar
+Cedar.se=1
+Cedar.SIMD=2
+Cedar.width=32
+Cedar.local_memory=32768
