@@ -96,8 +96,55 @@ jurisdiction and venue of these courts.
 
 float static max(float x, float y);
 double static max(double x, double y);
+char
+static max(char x, char y);
+
+uchar
+static max(uchar x, uchar y);
+
+short
+static max(short x, short y);
+
+ushort
+static max(ushort x, ushort y);
+
+int
+static max(int x, int y);
+
+uint
+static max(uint x, uint y);
+
+__LONG
+static max(__LONG x, __LONG y);
+
+__ULONG
+static max(__ULONG x, __ULONG y);
+
 float static min(float x, float y);
 double static min(double x, double y);
+char
+static min(char x, char y);
+
+uchar
+static min(uchar x, uchar y);
+
+short
+static min(short x, short y);
+
+ushort
+static min(ushort x, ushort y);
+
+int
+static min(int x, int y);
+
+uint
+static min(uint x, uint y);
+
+__LONG
+static min (__LONG x, __LONG y);
+
+__ULONG
+static min(__ULONG x, __ULONG y);
 
 
 /*---------------------------------------------------------------------------------------------------------------------
@@ -1061,7 +1108,77 @@ __ULONG r = 0;
     return(r);
 }
 
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* clamp
+*
+---------------------------------------------------------------------------------------------------------------------*/
 
+
+uchar
+static clamp(uchar x, uchar xmin, uchar xmax)
+{
+uchar r = 0;
+    r = min( max(x, xmin), xmax);
+    return(r);
+}
+
+char
+static clamp(char x, char xmin, char xmax)
+{
+char r = 0;
+    r = min( max(x, xmin), xmax);
+    return(r);
+}
+
+ushort
+static clamp(ushort x, ushort xmin, ushort xmax)
+{
+ushort r = 0;
+    r = min( max(x, xmin), xmax);
+    return(r);
+}
+
+short
+static clamp(short x, short xmin, short xmax)
+{
+short r = 0;
+    r = min( max(x, xmin), xmax);
+    return(r);
+}
+
+uint
+static clamp(uint x, uint xmin, uint xmax)
+{
+uint r = 0;
+    r = min( max(x, xmin), xmax);
+    return(r);
+}
+
+int
+static clamp(int x, int xmin, int xmax)
+{
+int r = 0;
+    r = min( max(x, xmin), xmax);
+    return(r);
+}
+
+
+__ULONG
+static clamp(__ULONG x, __ULONG xmin, __ULONG xmax)
+{
+__ULONG r = 0;
+    r = min( max(x, xmin), xmax);
+    return(r);
+}
+
+__LONG
+static clamp(__LONG x, __LONG xmin, __LONG xmax)
+{
+__LONG r = 0;
+    r = min( max(x, xmin), xmax);
+    return(r);
+}
 
 /*---------------------------------------------------------------------------------------------------------------------
 *
@@ -1763,6 +1880,7 @@ uint r = 0;
     r = x * y;
     return(r);
 }
+
 
 
 /*---------------------------------------------------------------------------------------------------------------------
@@ -4246,7 +4364,7 @@ smoothstep(double edge0, double edge1, double x)
 {
 double r = 0;
 double t = (x - edge0) / (edge1 - edge0);
-    t = clamp(t, 0, 1.);
+    t = clamp(t, 0., 1.);
     r = t * t * (3. - 2. * t);
     return(r);
 }
