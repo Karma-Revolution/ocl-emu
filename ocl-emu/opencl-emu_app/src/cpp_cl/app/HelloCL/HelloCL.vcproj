@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ATISTREAMSDKROOT)\include&quot;;&quot;$(CLEMU_ROOT)\include&quot;;&quot;$(CLEMU_ROOT)\clemu&quot;;&quot;$(CLEMU_ROOT)\runCL&quot;"
+				AdditionalIncludeDirectories="&quot;$(AMDAPPSDKROOT)\include&quot;;&quot;$(CLEMU_ROOT)\include&quot;;&quot;$(CLEMU_ROOT)\clemu&quot;;&quot;$(CLEMU_ROOT)\runCL&quot;"
 				PreprocessorDefinitions=" _GPU_EMU_IMPL;"
 				RuntimeLibrary="1"
 				DebugInformationFormat="4"
@@ -60,68 +60,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OpenCL.lib SDKUtil.lib glew32.lib glut32.lib  runCl.lib clemu.lib"
-				AdditionalLibraryDirectories="$(ATISTREAMSDKROOT)\lib\x86; $(CLEMU_ROOT)\lib\debug\x86;$(CLEMU_ROOT)\lib\x86"
+				AdditionalLibraryDirectories="$(AMDAPPSDKROOT)\lib\x86; $(CLEMU_ROOT)\lib\debug\x86;$(CLEMU_ROOT)\lib\x86"
 				GenerateDebugInformation="true"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="copy $(INPUTNAME)_Kernels.cl &quot;$(OUTDIR)&quot;\$(INPUTNAME)_Kernels.cl"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Debug|x64"
-			ConfigurationType="1"
-			InheritedPropertySheets="..\..\..\common\openclsdk_debug_x64.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				TargetEnvironment="3"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -184,6 +124,66 @@
 			<Tool
 				Name="VCLinkerTool"
 				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="copy $(INPUTNAME)_Kernels.cl &quot;$(OUTDIR)&quot;\$(INPUTNAME)_Kernels.cl"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|x64"
+			ConfigurationType="1"
+			InheritedPropertySheets="..\..\..\common\openclsdk_debug_x64.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
 			/>
 			<Tool
 				Name="VCALinkTool"

@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ATISTREAMSDKROOT)\include&quot;;&quot;$(CLEMU_ROOT)\include&quot;;&quot;$(CLEMU_ROOT)\clemu&quot;;&quot;$(CLEMU_ROOT)\runCL&quot;"
+				AdditionalIncludeDirectories="&quot;$(AMDAPPSDKROOT)\include&quot;;&quot;$(CLEMU_ROOT)\include&quot;;&quot;$(CLEMU_ROOT)\clemu&quot;;&quot;$(CLEMU_ROOT)\runCL&quot;"
 				PreprocessorDefinitions="_GPU_EMU_IMPL;"
 				RuntimeLibrary="1"
 				WarningLevel="3"
@@ -62,7 +62,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="OpenCL.lib SDKUtil.lib glew32.lib glut32.lib   runCl.lib clemu.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(ATISTREAMSDKROOT)\lib\x86; $(CLEMU_ROOT)\lib\debug\x86;$(CLEMU_ROOT)\lib\x86"
+				AdditionalLibraryDirectories="$(AMDAPPSDKROOT)\lib\x86; $(CLEMU_ROOT)\lib\debug\x86;$(CLEMU_ROOT)\lib\x86"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -90,10 +90,11 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug|x64"
+			Name="Release|Win32"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\..\..\common\openclsdk_debug_x64.vsprops"
+			InheritedPropertySheets="..\..\..\common\openclsdk_release.vsprops"
 			CharacterSet="2"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -109,7 +110,6 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -150,11 +150,10 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
+			Name="Debug|x64"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\..\..\common\openclsdk_release.vsprops"
+			InheritedPropertySheets="..\..\..\common\openclsdk_debug_x64.vsprops"
 			CharacterSet="2"
-			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -170,6 +169,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
+				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"

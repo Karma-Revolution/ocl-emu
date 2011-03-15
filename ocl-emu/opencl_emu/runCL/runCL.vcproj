@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ATISTREAMSDKROOT)\include&quot;;&quot;$(CLEMU_ROOT)\include&quot;;&quot;$(CLEMU_ROOT)\clemu&quot;"
+				AdditionalIncludeDirectories="&quot;$(AMDAPPSDKROOT)\include&quot;;&quot;$(CLEMU_ROOT)\include&quot;;&quot;$(CLEMU_ROOT)\clemu&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;NOMINMAX;_CALL_CL_EMU"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

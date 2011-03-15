@@ -43,7 +43,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(ATISTREAMSDKROOT)\include&quot;;&quot;$(CLEMU_ROOT)\include&quot;;"
+				AdditionalIncludeDirectories="&quot;$(AMDAPPSDKROOT)\include&quot;;&quot;$(CLEMU_ROOT)\include&quot;;"
 				RuntimeLibrary="1"
 				DebugInformationFormat="4"
 			/>
@@ -59,7 +59,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OpenCL.lib SDKUtil.lib glew32.lib glut32.lib"
-				AdditionalLibraryDirectories="$(ATISTREAMSDKROOT)\lib\x86; $(CLEMU_ROOT)\lib\debug\x86;$(CLEMU_ROOT)\lib\x86"
+				AdditionalLibraryDirectories="$(AMDAPPSDKROOT)\lib\x86; $(CLEMU_ROOT)\lib\debug\x86;$(CLEMU_ROOT)\lib\x86"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
