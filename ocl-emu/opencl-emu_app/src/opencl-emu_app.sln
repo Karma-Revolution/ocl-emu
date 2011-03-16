@@ -43,7 +43,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NBodyEmu", "cl\app\NBodyEmu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{E238529F-9172-4511-93BB-64A495F2C4C0}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\opencl_emu\doc\OpenCL Emu.docx = ..\..\opencl_emu\doc\OpenCL Emu.docx
 		..\..\opencl_emu\doc\opencl-1.1.pdf = ..\..\opencl_emu\doc\opencl-1.1.pdf
 	EndProjectSection
 EndProject
