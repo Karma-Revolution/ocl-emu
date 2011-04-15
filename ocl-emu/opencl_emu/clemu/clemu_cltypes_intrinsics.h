@@ -60,7 +60,7 @@ Security’s website at http://www.bis.doc.gov/.
 #include "runCLintnl.hpp"
 
 typedef unsigned int cl_mem_fence_flags; 
-typedef unsigned int size_t; 
+//typedef LONG size_t; 
 typedef unsigned int uint;
 typedef unsigned char uchar;
 typedef unsigned short ushort;
