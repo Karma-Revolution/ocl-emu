@@ -3726,42 +3726,25 @@ double2 ret;
 
 
 
-// FRAC
-
-static float2 frac( float2 _a)
-{
-float2 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
-	   return ret;
-}
-
-static double2 frac( double2 _a)
-{
-double2 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
-	   return ret;
-}
-
-
 // FRACT
 
-static float2 fract( float2 _a)
+static float2 fract( float2 _a, float2 *_b)
 {
 float2 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
+       ret.lo = fract(_a.lo, &(_b->lo));
+       ret.hi = fract(_a.hi, &(_b->hi));
 	   return ret;
 }
 
-static double2 fract( double2 _a)
+static double2 fract( double2 _a, double2 *_b)
 {
 double2 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
+       ret.lo = fract(_a.lo, &(_b->lo));
+       ret.hi = fract(_a.hi, &(_b->hi));
 	   return ret;
 }
+
+
 
 // FREXP
 
@@ -6115,40 +6098,24 @@ double4 ret;
 
 
 
-// FRAC
 
-static float4 frac( float4 _a)
-{
-float4 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
-	   return ret;
-}
-
-static double4 frac( double4 _a)
-{
-double4 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
-	   return ret;
-}
 
 
 // FRACT
 
-static float4 fract( float4 _a)
+static float4 fract( float4 _a, float4 *_b)
 {
 float4 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
+       ret.lo = fract(_a.lo, &(_b->lo));
+       ret.hi = fract(_a.hi, &(_b->hi));
 	   return ret;
 }
 
-static double4 fract( double4 _a)
+static double4 fract( double4 _a, double4 * _b)
 {
 double4 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
+       ret.lo = fract(_a.lo, &(_b->lo));
+       ret.hi = fract(_a.hi, &(_b->hi));
 	   return ret;
 }
 
@@ -8533,40 +8500,22 @@ double8 ret;
 
 
 
-// FRAC
-
-static float8 frac( float8 _a)
-{
-float8 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
-	   return ret;
-}
-
-static double8 frac( double8 _a)
-{
-double8 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
-	   return ret;
-}
-
 
 // FRACT
 
-static float8 fract( float8 _a)
+static float8 fract( float8 _a, float8 * _b)
 {
 float8 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
+       ret.lo = fract(_a.lo, &(_b->lo));
+       ret.hi = fract(_a.hi, &(_b->hi));
 	   return ret;
 }
 
-static double8 fract( double8 _a)
+static double8 fract( double8 _a, double8 * _b)
 {
 double8 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
+       ret.lo = fract(_a.lo, &(_b->lo));
+       ret.hi = fract(_a.hi, &(_b->hi));
 	   return ret;
 }
 
@@ -10749,40 +10698,23 @@ double16 ret;
 
 
 
-// FRAC
-
-static float16 frac( float16 _a)
-{
-float16 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
-	   return ret;
-}
-
-static double16 frac( double16 _a)
-{
-double16 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
-	   return ret;
-}
 
 
 // FRACT
 
-static float16 fract( float16 _a)
+static float16 fract( float16 _a, float16 *_b)
 {
 float16 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
+       ret.lo = fract(_a.lo, &(_b->lo));
+       ret.hi = fract(_a.hi, &(_b->hi));
 	   return ret;
 }
 
-static double16 fract( double16 _a)
+static double16 fract( double16 _a, double16 *_b)
 {
 double16 ret;
-       ret.lo = frac(_a.lo);
-       ret.hi = frac(_a.hi);
+       ret.lo = fract(_a.lo, &(_b->lo));
+       ret.hi = fract(_a.hi, &(_b->hi));
 	   return ret;
 }
 

@@ -2243,19 +2243,27 @@ float ret = (float)(double)fmin((double)_a, (double)_b);
 
 /*---------------------------------------------------------------------------------------------------------------------
 *
-* frac
+* fract
 *
 ---------------------------------------------------------------------------------------------------------------------*/
 
-static double frac( double _a)
+static double fract( double _a, double *_b)
 {
-double ret = _a - ((_a>=0)? floor(_a) : ceil(_a));
+// FIX THIS !!!!!
+double ret;
+       *_b = floor(_a);
+       ret = _a - *_b; 
 	   return ret;
 }
 
-static float frac( float _a)
+static float fract( float _a, float *_b)
 {
-float ret = _a - ((_a>=0)? floor(_a) : ceil(_a));
+float one = 1.f;
+int one_1 = as_int(one) - 1;
+float ret;
+       *_b = floor(_a);
+       ret = _a - *_b; 
+       ret =  fmin(ret, as_float(one_1));
 	   return ret;
 }
 
@@ -3643,12 +3651,14 @@ static
 float mul(float _a, float _b)
 {
 float ret = _a * _b;
+   return(ret);
 }
 
 static
 double mul(double _a, double _b)
 {
 double ret = _a * _b;
+   return(ret);
 }
 
 
@@ -4339,12 +4349,14 @@ static
 float dot(float _a, float _b)
 {
 float ret = mul(_a, _b);
+    return(ret);
 }
 
 static
 double dot(double _a, double _b)
 {
 double ret = mul(_a, _b);
+   return(ret);
 }
 
 
