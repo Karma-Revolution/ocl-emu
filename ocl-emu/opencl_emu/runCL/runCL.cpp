@@ -65,6 +65,7 @@ checkErr(cl_int err, const char * name)
     }
 }
 
+#if 0
 
 int runClGetDeviceInfo(runClDevProperty & retProperty, bool isGpu)
 {
@@ -134,6 +135,7 @@ int runClGetDeviceInfo(runClDevProperty & retProperty, bool isGpu)
 	return 1;
 }
 
+#endif
 
 static double sAccumTime = 0;
 static int sPass = 0;
