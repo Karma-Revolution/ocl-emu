@@ -132,8 +132,8 @@ int clemu_argCnt = 0; \
 int clemu_localAccumSz = 0; \
 CL_EMU_FIBER *clemu_Fiber = (CL_EMU_FIBER *)GetFiberData(); \
 clemuKernelGroup * clemu_group = (clemuKernelGroup * )clemu_Fiber->m_group_ptr; \
-char clemu_type_id[256];\
-int clemu_type_id_len;
+//char clemu_type_id[256];\
+//int clemu_type_id_len;
 
 
 
@@ -142,40 +142,12 @@ _TYPE_ NAME; \
 {\
 	void* clemu_arg_ptr; \
 	unsigned int arg_flags; \
-    strcpy_s(clemu_type_id, 256, typeid(NAME).name());\
-	clemu_type_id_len = (int)strlen(clemu_type_id); \
 	clemu_arg_ptr = clemu_group->GerArg(clemu_argCnt)->arg_ptr;\
 	arg_flags = clemu_group->GerArg(clemu_argCnt)->m_flags;\
-    if ( clemu_type_id[clemu_type_id_len-1] == '>') \
-    {\
-char dim[16]; \
-char type_nm[64]; \
-int idim; \
-int emu_c,emu_c2; \
-         for(emu_c = clemu_type_id_len-1; emu_c >= 0 && clemu_type_id[emu_c] != ','; emu_c--); \
-		 memcpy(dim,&clemu_type_id[emu_c+1],clemu_type_id_len-emu_c-2); \
-		 dim[clemu_type_id_len-emu_c-2] = 0; \
-		 sscanf_s(dim, "%d", &idim); \
-         clemu_type_id[emu_c] = 0; \
-         for(emu_c2 = emu_c-1; emu_c2 >= 0 && clemu_type_id[emu_c2] != '<'; emu_c2--); \
-		 strcpy_s(type_nm,64, &clemu_type_id[emu_c2 + 1]); \
-		 if(!strcmp(type_nm, "float")) \
-         {\
-			 memcpy(&NAME, &clemu_group->GerArg(clemu_argCnt)->m_arg.v_farg16[0],idim*sizeof(float));\
-         }\
-		 else if(!strcmp(type_nm, "double")) \
-         {\
-			 memcpy(&NAME, &clemu_group->GerArg(clemu_argCnt)->m_arg.v_darg16[0],idim*sizeof(double));\
-         }\
-	     else if(!strcmp(type_nm, "int") || !strcmp(type_nm, "unsigned int")) \
-         {\
-			 memcpy(&NAME, &clemu_group->GerArg(clemu_argCnt)->m_arg.v_iarg16[0],idim*sizeof(unsigned int));\
-         }\
-	     else if(!strcmp(type_nm, "__int64") || !strcmp(type_nm, "unsigned __int64")) \
-         {\
-			 memcpy(&NAME, &clemu_group->GerArg(clemu_argCnt)->m_arg.v_iarg16[0],idim*sizeof(unsigned __int64));\
-         }\
-    }\
+	if (arg_flags & CL_ARG_VALUE) \
+	{ \
+	    memcpy(&NAME, &clemu_group->GerArg(clemu_argCnt)->m_arg.v_iarg16[0], clemu_group->GerArg(clemu_argCnt)->m_len); \
+	} \
 	else if(arg_flags & CL_ARG_IMAGE) \
     {\
 	     NAME = *(_TYPE_*)&clemu_arg_ptr; \

@@ -134,6 +134,7 @@ public:
 		assert(_Indx >=0 && _Indx < 2 );
 		return (s[_Indx]);
 	}
+
 template <class _TT>
 clemu_vector2<_T> fill(_TT val)
 {
@@ -149,6 +150,55 @@ clemu_vector2<_T> fill(_TT val)
 		fill(0);
 	}
 
+/*---------------------------------------------------------------------------------------------------------
+  operators <
+---------------------------------------------------------------------------------------------------------*/
+	clemu_vector2<unsigned int>  operator < ( const clemu_vector2<_T> & _From ) const
+	{
+    clemu_vector2<unsigned int> ret;
+	    ret.lo = (uint)-(int)(lo < _From.lo);
+	    ret.hi = (uint)-(int)(hi < _From.hi);
+		return (ret);
+	}
+	clemu_vector2<unsigned int>  operator <= ( const clemu_vector2<_T> & _From ) const
+	{
+    clemu_vector2<unsigned int> ret;
+	    ret.lo = (uint)-(int)(lo <= _From.lo);
+	    ret.hi = (uint)-(int)(hi <= _From.hi);
+		return (ret);
+	}
+	clemu_vector2<unsigned int>  operator > ( const clemu_vector2<_T> & _From ) const
+	{
+    clemu_vector2<unsigned int> ret;
+	    ret.lo = (uint)-(int)(lo > _From.lo);
+	    ret.hi = (uint)-(int)(hi > _From.hi);
+		return (ret);
+	}
+	clemu_vector2<unsigned int>  operator >= ( const clemu_vector2<_T> & _From ) const 
+	{
+    clemu_vector2<unsigned int> ret;
+	    ret.lo = (uint)-(int)(lo >= _From.lo);
+	    ret.hi = (uint)-(int)(hi >= _From.hi);
+		return (ret);
+	}
+
+/*---------------------------------------------------------------------------------------------------------
+  operators == !=
+---------------------------------------------------------------------------------------------------------*/
+	clemu_vector2<unsigned int>  operator == ( const clemu_vector2<_T> & _From ) const
+	{
+    clemu_vector2<unsigned int> ret;
+	    ret.lo = (uint)-(int)(lo == _From.lo);
+	    ret.hi = (uint)-(int)(hi == _From.hi);
+		return (ret);
+	}
+	clemu_vector2<unsigned int>  operator != ( const clemu_vector2<_T> & _From ) const
+	{
+    clemu_vector2<unsigned int> ret;
+	    ret.lo = (uint)-(int)(lo != _From.lo);
+	    ret.hi = (uint)-(int)(hi != _From.hi);
+		return (ret);
+	}
 
 /*---------------------------------------------------------------------------------------------------------
   copy constructors
@@ -714,8 +764,54 @@ template <class _TT>
 	   *this = tmp;
 	   return(*this);
 	}
-
-
+/*---------------------------------------------------------------------------------------------------------
+  operators <
+---------------------------------------------------------------------------------------------------------*/
+	clemu_vector4<unsigned int>  operator < ( const clemu_vector4<_T> & _From ) const
+	{
+    clemu_vector4<unsigned int> ret;
+	    ret.lo = (lo < _From.lo);
+	    ret.hi = (hi < _From.hi);
+		return (ret);
+	}
+	clemu_vector4<unsigned int>  operator <= ( const clemu_vector4<_T> & _From ) const
+	{
+    clemu_vector4<unsigned int> ret;
+	    ret.lo = (lo <= _From.lo);
+	    ret.hi = (hi <= _From.hi);
+		return (ret);
+	}
+	clemu_vector4<unsigned int>  operator > ( const clemu_vector4<_T> & _From ) const 
+	{
+    clemu_vector4<unsigned int> ret;
+	    ret.lo = (lo > _From.lo);
+	    ret.hi = (hi > _From.hi);
+		return (ret);
+	}
+	clemu_vector4<unsigned int>  operator >= ( const clemu_vector4<_T> & _From ) const
+	{
+    clemu_vector4<unsigned int> ret;
+	    ret.lo = (lo >= _From.lo);
+	    ret.hi = (hi >= _From.hi);
+		return (ret);
+	}
+/*---------------------------------------------------------------------------------------------------------
+  operators == !=
+---------------------------------------------------------------------------------------------------------*/
+	clemu_vector4<unsigned int>  operator == ( const clemu_vector4<_T> & _From ) const
+	{
+    clemu_vector4<unsigned int> ret;
+	    ret.lo = (lo == _From.lo);
+	    ret.hi = (hi == _From.hi);
+		return (ret);
+	}
+	clemu_vector4<unsigned int>  operator != ( const clemu_vector4<_T> & _From ) const
+	{
+    clemu_vector4<unsigned int> ret;
+	    ret.lo = (lo != _From.lo);
+	    ret.hi = (hi != _From.hi);
+		return (ret);
+	}
 /*---------------------------------------------------------------------------------------------------------
   operators + 
 ---------------------------------------------------------------------------------------------------------*/
@@ -1250,6 +1346,55 @@ template <class _TT>
        clemu_vector8<_T> tmp(_In);
 	   *this = tmp;
 	   return(*this);
+	}
+
+/*---------------------------------------------------------------------------------------------------------
+  operators <
+---------------------------------------------------------------------------------------------------------*/
+	clemu_vector8<unsigned int>  operator < ( const clemu_vector8<_T> & _From ) const
+	{
+    clemu_vector8<unsigned int> ret;
+	    ret.lo = (lo < _From.lo);
+	    ret.hi = (hi < _From.hi);
+		return (ret);
+	}
+	clemu_vector8<unsigned int>  operator <= ( const clemu_vector8<_T> & _From ) const
+	{
+    clemu_vector8<unsigned int> ret;
+	    ret.lo = (lo <= _From.lo);
+	    ret.hi = (hi <= _From.hi);
+		return (ret);
+	}
+	clemu_vector8<unsigned int>  operator > ( const clemu_vector8<_T> & _From ) const
+	{
+    clemu_vector8<unsigned int> ret;
+	    ret.lo = (lo > _From.lo);
+	    ret.hi = (hi > _From.hi);
+		return (ret);
+	}
+	clemu_vector8<unsigned int>  operator >= ( const clemu_vector8<_T> & _From ) const
+	{
+    clemu_vector8<unsigned int> ret;
+	    ret.lo = (lo >= _From.lo);
+	    ret.hi = (hi >= _From.hi);
+		return (ret);
+	}
+/*---------------------------------------------------------------------------------------------------------
+  operators == !=
+---------------------------------------------------------------------------------------------------------*/
+	clemu_vector8<unsigned int>  operator == ( const clemu_vector8<_T> & _From ) const
+	{
+    clemu_vector8<unsigned int> ret;
+	    ret.lo = (lo == _From.lo);
+	    ret.hi = (hi == _From.hi);
+		return (ret);
+	}
+	clemu_vector8<unsigned int>  operator != ( const clemu_vector8<_T> & _From ) const
+	{
+    clemu_vector8<unsigned int> ret;
+	    ret.lo = (lo != _From.lo);
+	    ret.hi = (hi != _From.hi);
+		return (ret);
 	}
 
 
@@ -1825,7 +1970,55 @@ template <class _TT>
 	   return(*this);
 	}
 
+/*---------------------------------------------------------------------------------------------------------
+  operators <
+---------------------------------------------------------------------------------------------------------*/
+	clemu_vector16<unsigned int>  operator < ( const clemu_vector16<_T> & _From ) const
+	{
+    clemu_vector16<unsigned int> ret;
+	    ret.lo = (lo < _From.lo);
+	    ret.hi = (hi < _From.hi);
+		return (ret);
+	}
+	clemu_vector16<unsigned int>  operator <= ( const clemu_vector16<_T> & _From ) const
+	{
+    clemu_vector16<unsigned int> ret;
+	    ret.lo = (lo <= _From.lo);
+	    ret.hi = (hi <= _From.hi);
+		return (ret);
+	}
+	clemu_vector16<unsigned int>  operator > ( const clemu_vector16<_T> & _From ) const
+	{
+    clemu_vector16<unsigned int> ret;
+	    ret.lo = (lo > _From.lo);
+	    ret.hi = (hi > _From.hi);
+		return (ret);
+	}
+	clemu_vector16<unsigned int>  operator >= ( const clemu_vector16<_T> & _From ) const
+	{
+    clemu_vector16<unsigned int> ret;
+	    ret.lo = (lo >= _From.lo);
+	    ret.hi = (hi >= _From.hi);
+		return (ret);
+	}
 
+/*---------------------------------------------------------------------------------------------------------
+  operators == !=
+---------------------------------------------------------------------------------------------------------*/
+	clemu_vector16<unsigned int>  operator == ( const clemu_vector16<_T> & _From ) const
+	{
+    clemu_vector16<unsigned int> ret;
+	    ret.lo = (lo == _From.lo);
+	    ret.hi = (hi == _From.hi);
+		return (ret);
+	}
+	clemu_vector16<unsigned int>  operator != ( const clemu_vector16<_T> & _From ) const
+	{
+    clemu_vector16<unsigned int> ret;
+	    ret.lo = (lo != _From.lo);
+	    ret.hi = (hi != _From.hi);
+		return (ret);
+	}
 /*---------------------------------------------------------------------------------------------------------
   operators + 
 ---------------------------------------------------------------------------------------------------------*/
