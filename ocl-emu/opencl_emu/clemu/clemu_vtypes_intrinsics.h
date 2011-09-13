@@ -12156,6 +12156,98 @@ void vstore16(clemu_vector16<_T> data, size_t off, _T *p)
 }
 
 
+// COPY/PREFETCH functions
+#if 0
+template <class _T>
+event_t async_work_group_copy (
+                               __global _T *dst,
+                               const __local _T *src,
+                               size_t num_gentypes,
+                               event_t event)
+{
+event_t ret = 0;
+uint lcl_id = get_local_id(0) + get_local_id(1) * get_local_size(0);
+
+   if ( lcl_id == 0 )
+   {
+       for(int i = 0; i < num_gentypes; i++)
+       {
+	      dst[i] = src[i];
+       }
+   }
+   return(ret);
+}
+#endif
+
+template <class _T>
+event_t async_work_group_copy (
+                               __local _T *dst,
+                               const __global _T *src,
+                               size_t num_gentypes,
+                               event_t event)
+{
+event_t ret = 0;
+uint lcl_id = get_local_id(0) + get_local_id(1) * get_local_size(0);
+
+   if ( lcl_id == 0 )
+   {
+       for(int i = 0; i < num_gentypes; i++)
+       {
+	      dst[i] = src[i];
+       }
+   }
+   return(ret);
+}
+
+#if 0
+template <class _T>
+event_t async_work_group_strided_copy (
+                                       __global _T *dst,
+                                       const __local _T *src,
+                                       size_t num_gentypes,
+                                       size_t dst_stride,
+                                       event_t event)
+{
+even_t ret = 0;
+uint lcl_id = get_local_id(0) + get_local_id(1) * get_local_size(0);
+   if ( lcl_id == 0 )
+   {
+       for(int i = 0; i < num_gentypes; i++)
+       {
+	      dst[dst_stride*i] = src[i];
+       }
+   }
+   return(ret);
+}
+#endif
+
+template <class _T>
+event_t async_work_group_strided_copy (
+                                        __local _T *dst,
+                                        const __global _T *src,
+                                        size_t num_gentypes,
+                                        size_t src_stride,
+                                        event_t event)
+{
+even_t ret = 0;
+uint lcl_id = get_local_id(0) + get_local_id(1) * get_local_size(0);
+   if ( lcl_id == 0 )
+   {
+       for(int i = 0; i < num_gentypes; i++)
+       {
+	      dst[i] = src[src_stride*i];
+       }
+   }
+   return(ret);
+}
+
+template <class _T>
+void prefetch (const __global _T *p,
+                            size_t num_gentypes)
+{
+}
+
+
 #endif
 
 /*---------------------------------------------------------------------------------------------------------
@@ -12168,6 +12260,7 @@ void vstore16(clemu_vector16<_T> data, size_t off, _T *p)
 #define VECA2(_Vec, _Arr) VEC2(_Vec, _Arr[0], _Arr[1])
 #define VECA3(_Vec, _Arr) VEC3(_Vec, _Arr[0], _Arr[1], _Arr[2])
 #define VECA4(_Vec, _Arr) VEC4(_Vec, _Arr[0], _Arr[1], _Arr[2], _Arr[3])
+
 
 
 

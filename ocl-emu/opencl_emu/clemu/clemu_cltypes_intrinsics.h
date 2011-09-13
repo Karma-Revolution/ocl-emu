@@ -67,6 +67,7 @@ typedef unsigned short ushort;
 typedef VOID 
 (__stdcall *KERNEL_ENTRY_POINT) ( LPVOID lpParameter );
 typedef unsigned int sampler_t;
+typedef unsigned int event_t;
 
 // CROSS_COMPILER
 
@@ -356,7 +357,7 @@ static void write_mem_fence (cl_mem_fence_flags flags = 0)
 
 
 
-// ATOMIC
+// ATOM
 #define CAL_EMU_MIN(a, b) ((a) <= (b)) ? (a) : (b)
 #define CAL_EMU_MAX(a, b) ((a) >= (b)) ? (a) : (b)
 
@@ -508,6 +509,158 @@ uint ret = *_old_ptr;
 }
 
 
+
+// ATOMIC
+
+static int atomic_add(int *_old_ptr, int _val)
+{
+int ret;
+
+    ret = (*_old_ptr);
+    *_old_ptr += _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+
+static uint atomic_add(uint *_old_ptr, uint _val)
+{
+uint ret;
+    ret = *_old_ptr;
+    *_old_ptr += _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+static int atomic_sub(int *_old_ptr, int _val)
+{
+int ret = *_old_ptr;
+    *_old_ptr -= _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+static uint atomic_sub(uint *_old_ptr, uint _val)
+{
+uint ret = *_old_ptr;
+    *_old_ptr -= _val;
+	clemu_ScheduleGrpThread();
+	return(ret);
+}
+
+static int atomic_xchg(int *_old_ptr, int _val)
+{
+int ret = *_old_ptr;
+    *_old_ptr = _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+
+static uint atomic_xchg(uint *_old_ptr, uint _val)
+{
+uint ret = *_old_ptr;
+    *_old_ptr = _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+static float atomic_xchg(float *_old_ptr, float _val)
+{
+float ret = *_old_ptr;
+    *_old_ptr = _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+
+static int atomic_cmpxchg(int *_old_ptr, int _cmp, int _val)
+{
+int ret;
+    ret = (*_old_ptr == _cmp) ? *_old_ptr : _val ;
+	*_old_ptr = (*_old_ptr == _cmp) ? _val : *_old_ptr;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+
+static uint atomic_cmpxchg(uint *_old_ptr, uint _cmp, uint _val)
+{
+uint ret;
+    ret = (*_old_ptr == _cmp) ? *_old_ptr : _val ;
+	*_old_ptr = (*_old_ptr == _cmp) ? _val : *_old_ptr;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+
+static int atomic_min(int *_old_ptr, int _val)
+{
+int ret = *_old_ptr;
+    *_old_ptr = CAL_EMU_MIN(*_old_ptr, _val);
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+static uint atomic_min(uint *_old_ptr, uint _val)
+{
+uint ret = *_old_ptr;
+    *_old_ptr = CAL_EMU_MIN(*_old_ptr, _val);
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+static int atomic_max(int *_old_ptr, int _val)
+{
+int ret = *_old_ptr;
+    *_old_ptr = CAL_EMU_MAX(*_old_ptr, _val);
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+static uint atomic_max(uint *_old_ptr, uint _val)
+{
+uint ret = *_old_ptr;
+    *_old_ptr = CAL_EMU_MAX(*_old_ptr, _val);
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+
+static int atomic_and(int *_old_ptr, int _val)
+{
+int ret = *_old_ptr;
+    *_old_ptr &= _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+static uint atomic_and(uint *_old_ptr, uint _val)
+{
+uint ret = *_old_ptr;
+    *_old_ptr &= _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+
+static int atomic_or(int *_old_ptr, int _val)
+{
+int ret = *_old_ptr;
+    *_old_ptr |= _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+static uint atomic_or(uint *_old_ptr, uint _val)
+{
+uint ret = *_old_ptr;
+    *_old_ptr |= _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+static int atomic_xor(int *_old_ptr, int _val)
+{
+int ret = *_old_ptr;
+    *_old_ptr ^= _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+static uint atomic_xor(uint *_old_ptr, uint _val)
+{
+uint ret = *_old_ptr;
+    *_old_ptr ^= _val;
+//	clemu_ScheduleGrpThread();
+	return(ret);
+}
+
+
+
 /**************************************************************************************
  IMAGE
 **************************************************************************************/
@@ -641,6 +794,17 @@ const ClImageArg * img = (const ClImageArg*)image;
     ret.y = img->image_height;
     ret.z = img->image_depth;
 	return(ret);
+}
+
+
+// COPY/PREFETCH functions
+
+
+
+inline void wait_group_events (int num_events,
+                         event_t *event_list)
+{
+
 }
 
 #endif
