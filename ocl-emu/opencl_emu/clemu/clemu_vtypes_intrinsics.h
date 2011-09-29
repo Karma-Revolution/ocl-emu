@@ -2917,6 +2917,67 @@ _T r;
     return(r);
 }
 
+
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* upsample
+*
+---------------------------------------------------------------------------------------------------------------------*/
+short2
+static upsample(char2 hi, uchar2 lo)
+{
+short2 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+ushort2
+static upsample(uchar2 hi, uchar2 lo)
+{
+ushort2 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+int2
+static upsample(short2 hi, ushort2 lo)
+{
+int2 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+uint2
+static upsample(ushort2 hi, ushort2 lo)
+{
+uint2 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+__LONG2
+static upsample(int2 hi, uint2 lo)
+{
+__LONG2 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+static __ULONG2
+upsample(uint2 hi, uint2 lo)
+{
+__ULONG2 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+
 /************************************************************************
 *
 * common
@@ -5453,6 +5514,64 @@ uint amd_pack(float4 src)
            ((((uint)src.z) & 0xFF) << 16) +
            ((((uint)src.w) & 0xFF) << 24);
 }
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* upsample
+*
+---------------------------------------------------------------------------------------------------------------------*/
+short4
+static upsample(char4 hi, uchar4 lo)
+{
+short4 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+ushort4
+static upsample(uchar4 hi, uchar4 lo)
+{
+ushort4 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+int4
+static upsample(short4 hi, ushort4 lo)
+{
+int4 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+uint4
+static upsample(ushort4 hi, ushort4 lo)
+{
+uint4 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+__LONG4
+static upsample(int4 hi, uint4 lo)
+{
+__LONG4 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+static __ULONG4
+upsample(uint4 hi, uint4 lo)
+{
+__ULONG4 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
 
 
 /*------------------------------------------------------------------------------------
@@ -7856,7 +7975,64 @@ uint8 ret;
     return(ret);
 }
 
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* upsample
+*
+---------------------------------------------------------------------------------------------------------------------*/
+short8
+static upsample(char8 hi, uchar8 lo)
+{
+short8 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
 
+ushort8
+static upsample(uchar8 hi, uchar8 lo)
+{
+ushort8 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+int8
+static upsample(short8 hi, ushort8 lo)
+{
+int8 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+uint8
+static upsample(ushort8 hi, ushort8 lo)
+{
+uint8 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+__LONG8
+static upsample(int8 hi, uint8 lo)
+{
+__LONG8 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+static __ULONG8
+upsample(uint8 hi, uint8 lo)
+{
+__ULONG8 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
 
 /*------------------------------------------------------------------------------------
 * 
@@ -10055,6 +10231,64 @@ uint16 ret;
     return(ret);
 }
 
+/*---------------------------------------------------------------------------------------------------------------------
+*
+* upsample
+*
+---------------------------------------------------------------------------------------------------------------------*/
+short16
+static upsample(char16 hi, uchar16 lo)
+{
+short16 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+ushort16
+static upsample(uchar16 hi, uchar16 lo)
+{
+ushort16 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+int16
+static upsample(short16 hi, ushort16 lo)
+{
+int16 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+uint16
+static upsample(ushort16 hi, ushort16 lo)
+{
+uint16 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+__LONG16
+static upsample(int16 hi, uint16 lo)
+{
+__LONG16 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
+
+static __ULONG16
+upsample(uint16 hi, uint16 lo)
+{
+__ULONG16 r = 0;
+    r.lo = upsample(hi.lo, lo.lo);
+    r.hi = upsample(hi.hi, lo.hi);
+    return(r);
+}
 
 
 /*------------------------------------------------------------------------------------

@@ -1736,7 +1736,7 @@ __ULONG r = 0;
 *
 ---------------------------------------------------------------------------------------------------------------------*/
 short
-static upsampleu8(char hi, uchar lo)
+static upsample(char hi, uchar lo)
 {
 short r = 0;
     r = ((short)hi << 8) | lo;
@@ -1744,7 +1744,7 @@ short r = 0;
 }
 
 ushort
-static upsampleu8(uchar hi, uchar lo)
+static upsample(uchar hi, uchar lo)
 {
 ushort r = 0;
     r = ((ushort)hi << 8) | lo;
@@ -1752,7 +1752,7 @@ ushort r = 0;
 }
 
 int
-static upsampleu16(short hi, ushort lo)
+static upsample(short hi, ushort lo)
 {
 int r = 0;
     r = ((int)hi << 16) | lo;
@@ -1760,7 +1760,7 @@ int r = 0;
 }
 
 uint
-static upsampleu16(ushort hi, ushort lo)
+static upsample(ushort hi, ushort lo)
 {
 uint r = 0;
     r = ((uint)hi << 16) | lo;
@@ -1768,7 +1768,7 @@ uint r = 0;
 }
 
 __LONG
-static upsampleu32(int hi, uint lo)
+static upsample(int hi, uint lo)
 {
 __LONG r = 0;
     r = ((__LONG)hi << 32) | lo;
@@ -1776,7 +1776,7 @@ __LONG r = 0;
 }
 
 static __ULONG
-upsampleu32(uint hi, uint lo)
+upsample(uint hi, uint lo)
 {
 __ULONG r = 0;
     r = ((__ULONG)hi << 32) | lo;
