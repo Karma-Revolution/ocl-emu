@@ -47,10 +47,12 @@ Security’s website at http://www.bis.doc.gov/.
 #if defined(__APPLE__) || defined(__MACOSX)
 #include <OpenCL/cl.h>
 #else
-#include <CL/cl.h>
-#ifdef __cplusplus
-#include <CL/cl.hpp>
+
+#ifndef CL_USE_DEPRECATED_OPENCL_1_1_APIS
+#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
 #endif
+#include <CL/opencl.h>
+
 
 #endif
 
