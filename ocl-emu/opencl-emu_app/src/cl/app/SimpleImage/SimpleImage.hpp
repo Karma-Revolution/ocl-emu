@@ -96,6 +96,9 @@ jurisdiction and venue of these courts.
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#ifndef CL_USE_DEPRECATED_OPENCL_1_1_APIS
+#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
+#endif
 #include <SDKUtil/SDKCommon.hpp>
 #include <SDKUtil/SDKApplication.hpp>
 #include <SDKUtil/SDKFile.hpp>

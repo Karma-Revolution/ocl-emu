@@ -96,14 +96,17 @@ jurisdiction and venue of these courts.
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+
+//EXTERNAL
+#include "runCL.h"
+
 #include <SDKUtil/SDKCommon.hpp>
 #include <SDKUtil/SDKApplication.hpp>
 #include <SDKUtil/SDKFile.hpp>
 #include <SDKUtil/SDKBitMap.hpp>
 
 
-//EXTERNAL
-#include "runCL.h"
+
 
 
 #define INPUT_IMAGE "SimpleImage_Input.bmp"

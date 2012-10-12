@@ -97,16 +97,18 @@ jurisdiction and venue of these courts.
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
-#include <SDKUtil/SDKFile.hpp>
-#include <SDKUtil/SDKCommon.hpp>
+
 
 #define __NO_STD_VECTOR
 #define __NO_STD_STRING
 
-#include <CL/cl.hpp>
-
 //EXTERNAL
 #include "runCL.h"
+
+#include <CL/cl.hpp>
+
+#include <SDKUtil/SDKFile.hpp>
+#include <SDKUtil/SDKCommon.hpp>
 
 #define DEFAULT_KERNEL_LOCATION "./"
 

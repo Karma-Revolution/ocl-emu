@@ -92,25 +92,26 @@ jurisdiction and venue of these courts.
 
 #ifndef NBODY_H_
 #define NBODY_H_
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <string.h>
 
+
+//EXTERNAL
+#include "runCL.h"
 #if defined(__APPLE__) || defined(__MACOSX)
 #include <OpenCL/cl.h>
 #else
 #include <CL/cl.h>
 #endif
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <string.h>
+
 #include <SDKUtil/SDKCommon.hpp>
 #include <SDKUtil/SDKApplication.hpp>
 #include <SDKUtil/SDKCommandArgs.hpp>
 #include <SDKUtil/SDKFile.hpp>
 
 
-
-//EXTERNAL
-#include "runCL.h"
 
 
 
