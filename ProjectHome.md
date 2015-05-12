@@ -1,0 +1,4 @@
+OpenCl Emulator-debugger is a project originated at AMD. It allows to compile and to debug OpenCl kernels as C++ procedures.
+The goal of the project is to provide OpenCl developers with the full support of MS Visual Studio C++ development and debugging environment.
+The emulator intends to help at least 2 kinds of developers.
+First group are novices who do not like to learn intricacies of the OpenCl run-time and would like to get “Hello World” kernel as an one line call (as it should be). The second group is algorithm developers who also do not like to know idiosyncrasies of OpenCl run-time but need to concentrate on intricacies of their massive parallel algorithm(s).
